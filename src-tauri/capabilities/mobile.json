@@ -1,0 +1,15 @@
+{
+  "$schema": "../gen/schemas/mobile-schema.json",
+  "identifier": "mobile-capability",
+  "description": "Mobile-specific capabilities for the current template",
+  "windows": ["main"],
+  "platforms": ["iOS", "android"],
+  "permissions": [
+    "core:default",
+    "core:event:default",
+    "opener:default",
+    "notification:default",
+    "dialog:default",
+    "store:default"
+  ]
+}

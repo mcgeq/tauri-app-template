@@ -1,0 +1,147 @@
+name: publish
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: 'Existing git tag to publish, for example v0.1.0'
+        required: true
+        type: string
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.92.0
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: ./src-tauri -> target
+      - run: sudo apt-get update
+      - run: sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm check:all
+
+  resolve-release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      tag_name: ${{ steps.resolve.outputs.tag_name }}
+      version: ${{ steps.resolve.outputs.version }}
+    steps:
+      - name: Resolve release metadata
+        id: resolve
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG_NAME="${{ inputs.release_tag }}"
+          else
+            TAG_NAME="${GITHUB_REF_NAME}"
+          fi
+
+          if [[ ! "$TAG_NAME" =~ ^v[0-9].* ]]; then
+            echo "Release tag must start with v, got: $TAG_NAME" >&2
+            exit 1
+          fi
+
+          VERSION="${TAG_NAME#v}"
+
+          echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+  publish-tauri:
+    needs:
+      - verify
+      - resolve-release
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: macos-latest
+            args: --target aarch64-apple-darwin
+          - platform: macos-latest
+            args: --target x86_64-apple-darwin
+          - platform: ubuntu-22.04
+            args: ''
+          - platform: windows-latest
+            args: '--bundles nsis,updater'
+
+    runs-on: ${{ matrix.platform }}
+    timeout-minutes: 60
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Add macOS cross-compilation target
+        if: matrix.platform == 'macos-latest'
+        run: rustup target add x86_64-apple-darwin
+
+      - name: Rust cache
+        uses: swatinem/rust-cache@v2
+        with:
+          workspaces: ./src-tauri -> target
+
+      - name: Install Linux dependencies
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.1-dev libgtk-3-dev libayatana-appindicator3-dev librsvg2-dev patchelf
+
+      - name: Install frontend dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Configure updater
+        shell: bash
+        run: |
+          REPO="${{ github.repository }}"
+          ENDPOINT="https://github.com/${REPO}/releases/latest/download/latest.json"
+          PUBKEY="${{ secrets.TAURI_SIGNING_PUBLIC_KEY }}"
+
+          sed -i.bak "s|__TAURI_UPDATER_ENDPOINT__|${ENDPOINT}|g" src-tauri/tauri.conf.json
+          sed -i.bak "s|__TAURI_UPDATER_PUBKEY__|${PUBKEY}|g" src-tauri/tauri.conf.json
+
+          echo "Updater configured with endpoint: ${ENDPOINT}"
+
+      - name: Build the project
+        uses: tauri-apps/tauri-action@v0
+        id: tauri-action
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ needs.resolve-release.outputs.tag_name }}
+          releaseName: App v${{ needs.resolve-release.outputs.version }}
+          releaseBody: See the assets to download this version and install.
+          releaseDraft: false
+          prerelease: false
+          args: ${{ matrix.args }}
