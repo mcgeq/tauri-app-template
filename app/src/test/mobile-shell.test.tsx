@@ -51,6 +51,7 @@ vi.mock('@/platform/windows/window-navigation-bridge', () => ({
 
 vi.mock('@/platform/runtime/platform', () => ({
   IS_DESKTOP: false,
+  IS_TAURI_APP: false,
 }));
 
 vi.mock('@/i18n', () => ({}));

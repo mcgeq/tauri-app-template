@@ -6,3 +6,5 @@ pub mod window_behavior;
 
 #[cfg(desktop)]
 pub mod tray;
+
+pub mod notes;

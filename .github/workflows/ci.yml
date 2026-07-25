@@ -6,6 +6,40 @@ on:
   pull_request:
 
 jobs:
+  server:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: tauri_app_template
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: 1.92.0
+      - uses: swatinem/rust-cache@v2
+        with:
+          workspaces: . -> target
+      - name: Build server
+        run: cargo build -p server
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/tauri_app_template
+      - name: Run server tests
+        run: cargo test -p server
+        env:
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432/tauri_app_template
+
   frontend-and-rust:
     runs-on: ubuntu-latest
     timeout-minutes: 30

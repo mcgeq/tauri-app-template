@@ -13,8 +13,7 @@ impl AppConfig {
                 .ok()
                 .and_then(|v| v.parse().ok())
                 .unwrap_or(3000),
-            database_url: std::env::var("DATABASE_URL")
-                .expect("DATABASE_URL must be set"),
+            database_url: std::env::var("DATABASE_URL").expect("DATABASE_URL must be set"),
         }
     }
 }

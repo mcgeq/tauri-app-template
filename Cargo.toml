@@ -2,7 +2,9 @@
 resolver = "2"
 members = [
     "types",
+    "entity",
     "server",
+    "migration",
     "app/src-tauri",
 ]
 
@@ -22,6 +24,13 @@ tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt", "registry", "json", "alloc", "chrono"] }
 chrono = "0.4"
 thiserror = "2"
+uuid = { version = "1", features = ["v7", "serde"] }
+sea-orm = { version = "1", features = ["sqlx-postgres", "runtime-tokio-rustls", "macros", "chrono"] }
+sea-orm-migration = { version = "1", features = ["sqlx-postgres", "runtime-tokio-rustls"] }
+axum = "0.8"
+tokio = { version = "1", features = ["full"] }
+tower-http = { version = "0.6", features = ["cors", "trace"] }
+dotenvy = "0.15"
 
 [profile.release]
 lto = true

@@ -33,9 +33,11 @@ Modern desktop application template built with Tauri v2 + React 19 + TypeScript 
 ### Commands
 
 ```bash
-cd app && pnpm install        # Install dependencies
-cd app && pnpm tauri dev      # Start dev server
-cd app && pnpm tauri build    # Build for production
+pnpm install                  # Install dependencies (from root or app/)
+pnpm tauri dev                # Start Tauri dev server
+pnpm dev                      # Start Vite frontend only
+pnpm tauri build              # Build for production
+pnpm build                    # Build frontend only
 pnpm lint                     # Lint and format code (from root)
 pnpm lint:fix                 # Lint and auto-fix
 cd app && pnpm test           # Run tests

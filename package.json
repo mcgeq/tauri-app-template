@@ -10,7 +10,11 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "prepare": "simple-git-hooks",
-    "commitlint": "commitlint"
+    "commitlint": "commitlint",
+    "dev": "pnpm --filter tauri-app-template dev",
+    "tauri": "pnpm --filter tauri-app-template tauri",
+    "build": "pnpm --filter tauri-app-template build",
+    "server": "cd server && cargo run"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.0.0",
@@ -30,7 +34,7 @@
   },
   "lint-staged": {
     "app/src/**/*.{ts,tsx}": "eslint --fix",
-    "app/src-tauri/**/*.{rs}": "",
+    "app/src-tauri/**/*.rs": "",
     "*.{css,json,md}": "eslint --fix"
   }
 }

@@ -1,4 +1,4 @@
-import releaseWorkflow from '../../.github/workflows/release.yml?raw';
+import releaseWorkflow from '../../../.github/workflows/release.yml?raw';
 
 describe('release workflow', () => {
   it('does not keep placeholder release metadata values', () => {

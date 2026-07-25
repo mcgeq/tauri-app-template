@@ -1,11 +1,9 @@
 mod config;
-mod db;
-mod entity;
-mod error;
-mod routes;
 
 use std::net::SocketAddr;
 
+use migration::MigratorTrait;
+use server::{db, routes};
 use tower_http::cors::CorsLayer;
 use tower_http::trace::TraceLayer;
 use tracing_subscriber::EnvFilter;
@@ -23,6 +21,10 @@ async fn main() {
         .await
         .expect("Failed to connect to database");
 
+    migration::Migrator::up(&db, None)
+        .await
+        .expect("Database migration failed");
+
     let app = routes::create_router(db)
         .layer(TraceLayer::new_for_http())
         .layer(CorsLayer::permissive());
@@ -36,7 +38,5 @@ async fn main() {
     let listener = tokio::net::TcpListener::bind(addr)
         .await
         .expect("Failed to bind address");
-    axum::serve(listener, app)
-        .await
-        .expect("Server failed");
+    axum::serve(listener, app).await.expect("Server failed");
 }

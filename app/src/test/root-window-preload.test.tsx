@@ -17,6 +17,8 @@ vi.mock('@tauri-apps/api/webviewWindow', () => ({
   getCurrentWebviewWindow: () => ({
     label: 'main',
     show: rootPreloadTestState.showMock,
+    isMaximized: vi.fn().mockResolvedValue(false),
+    onResized: vi.fn().mockResolvedValue(vi.fn()),
   }),
   WebviewWindow: class MockWebviewWindow {
     static getByLabel(...args: unknown[]) {
@@ -53,6 +55,7 @@ vi.mock('@/platform/windows/window-navigation-bridge', () => ({
 
 vi.mock('@/platform/runtime/platform', () => ({
   IS_DESKTOP: true,
+  IS_TAURI_APP: true,
 }));
 
 vi.mock('@/i18n', () => ({}));

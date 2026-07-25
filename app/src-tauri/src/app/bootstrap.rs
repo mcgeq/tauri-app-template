@@ -104,6 +104,8 @@ pub fn with_commands(builder: tauri::Builder<tauri::Wry>) -> tauri::Builder<taur
         crate::commands::window_behavior::set_window_behavior_config,
         #[cfg(desktop)]
         crate::commands::tray::update_tray_menu,
+        crate::commands::notes::list_notes,
+        crate::commands::notes::create_note,
     ])
 }
 

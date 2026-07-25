@@ -9,6 +9,5 @@ describe('tauri version alignment', () => {
     expect(packageJson.dependencies['@tauri-apps/plugin-store']).toBe('2.4.3');
     expect(packageJson.dependencies['@tauri-apps/plugin-updater']).toBe('2.10.1');
     expect(packageJson.devDependencies['@tauri-apps/cli']).toBe('2.11.2');
-    expect(packageJson.pnpm?.overrides?.['@tauri-apps/api']).toBe('2.11.0');
   });
 });

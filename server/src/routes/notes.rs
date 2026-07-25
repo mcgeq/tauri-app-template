@@ -2,12 +2,13 @@ use axum::extract::{Path, State};
 use axum::routing::get;
 use axum::{Json, Router};
 use sea_orm::ActiveValue::Set;
-use sea_orm::{ActiveModelTrait, EntityTrait, QueryOrder};
 use sea_orm::DatabaseConnection;
+use sea_orm::{ActiveModelTrait, EntityTrait, QueryOrder};
 use types::note::{CreateNoteRequest, Note, UpdateNoteRequest};
+use uuid::Uuid;
 
-use crate::entity::notes;
 use crate::error::AppError;
+use entity::notes;
 
 pub fn routes() -> Router<DatabaseConnection> {
     Router::new()
@@ -27,7 +28,7 @@ async fn list_notes(State(db): State<DatabaseConnection>) -> Result<Json<Vec<Not
 
 async fn get_note(
     State(db): State<DatabaseConnection>,
-    Path(id): Path<i64>,
+    Path(id): Path<Uuid>,
 ) -> Result<Json<Note>, AppError> {
     let model = notes::Entity::find_by_id(id)
         .one(&db)
@@ -41,7 +42,12 @@ async fn create_note(
     State(db): State<DatabaseConnection>,
     Json(req): Json<CreateNoteRequest>,
 ) -> Result<Json<Note>, AppError> {
+    if req.title.trim().is_empty() {
+        return Err(AppError::ValidationError("Title must not be empty".into()));
+    }
+
     let model = notes::ActiveModel {
+        id: Set(Uuid::now_v7()),
         title: Set(req.title),
         content: Set(req.content),
         ..Default::default()
@@ -54,9 +60,15 @@ async fn create_note(
 
 async fn update_note(
     State(db): State<DatabaseConnection>,
-    Path(id): Path<i64>,
+    Path(id): Path<Uuid>,
     Json(req): Json<UpdateNoteRequest>,
 ) -> Result<Json<Note>, AppError> {
+    if req.title.is_none() && req.content.is_none() {
+        return Err(AppError::BadRequest(
+            "At least one of title or content must be provided".into(),
+        ));
+    }
+
     let note = notes::Entity::find_by_id(id)
         .one(&db)
         .await?
@@ -77,7 +89,7 @@ async fn update_note(
 
 async fn delete_note(
     State(db): State<DatabaseConnection>,
-    Path(id): Path<i64>,
+    Path(id): Path<Uuid>,
 ) -> Result<Json<()>, AppError> {
     let result = notes::Entity::delete_by_id(id).exec(&db).await?;
     if result.rows_affected == 0 {

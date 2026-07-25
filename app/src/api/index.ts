@@ -17,6 +17,8 @@ export type {
   ShortcutChangedPayload,
 } from './events';
 export { greet } from './greet';
+export { createNote, listNotes } from './notes';
+export type { Note } from './notes';
 export { getStore, resetStore } from './store';
 export { onTaskComplete, onTaskProgress, startBackgroundTask } from './task';
 export type { TaskCompletePayload, TaskProgressPayload } from './task';
