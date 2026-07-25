@@ -6,6 +6,20 @@ services:
     volumes:
       - .:/app
       - /app/node_modules
-      - /app/src-tauri/target
+      - /app/app/src-tauri/target
     environment:
       - TAURI_DEV_HOST=0.0.0.0
+
+  postgres:
+    image: postgres:17-alpine
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: tauri_app_template
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

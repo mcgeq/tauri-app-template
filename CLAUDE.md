@@ -6,19 +6,21 @@ Modern desktop application template built with Tauri v2 + React 19 + TypeScript 
 
 ## Architecture
 
-- **Frontend**: React 19 + TypeScript + Vite + Tailwind CSS v3 + shadcn/ui
-- **Backend**: Tauri v2 (Rust)
-- **Build**: pnpm + Vite + Cargo
+- **App**: React 19 + TypeScript + Vite + Tailwind CSS v3 + shadcn/ui + Tauri v2
+- **Server**: Rust + axum + PostgreSQL (REST API)
+- **Shared Types**: Rust crate shared between app and server
+- **Build**: pnpm + Vite + Cargo workspace
 
 ## Module Index
 
-| Module        | Path            | Tech Stack       | Responsibility                |
-| ------------- | --------------- | ---------------- | ----------------------------- |
-| Frontend      | `src/`          | TypeScript/React | UI, components, styles, i18n  |
-| Backend       | `src-tauri/`    | Rust             | System calls, native features |
-| Documentation | `docs/`         | Markdown         | Project guides and references |
-| Scripts       | `scripts/`      | Node.js / PS1    | Code generation, release, signing |
-| Config        | `vite.config.ts`| Vite             | Build config + chunk splitting|
+| Module        | Path               | Tech Stack         | Responsibility                     |
+| ------------- | ------------------ | ------------------ | ---------------------------------- |
+| App (Frontend)| `app/src/`         | TypeScript/React   | UI, components, styles, i18n       |
+| App (Desktop) | `app/src-tauri/`   | Rust               | System calls, native features      |
+| Server        | `server/`          | Rust/axum          | REST API, data persistence         |
+| Shared Types  | `types/`           | Rust               | Domain models shared across crates |
+| Documentation | `docs/`            | Markdown           | Project guides and references      |
+| Scripts       | `app/scripts/`     | Node.js / PS1      | Code generation, release, signing  |
 
 ## Development
 
@@ -31,29 +33,38 @@ Modern desktop application template built with Tauri v2 + React 19 + TypeScript 
 ### Commands
 
 ```bash
-pnpm install        # Install dependencies
-pnpm tauri dev      # Start dev server
-pnpm tauri build    # Build for production
-pnpm lint           # Lint and format code
-pnpm lint:fix       # Lint and auto-fix
-pnpm test           # Run tests
-pnpm analyze        # Analyze bundle size
-pnpm commitlint             # Check commit message against conventional commits
-pnpm generate:keystore      # Generate Android signing keystore (interactive)
-pnpm generate:keystore:ci   # Generate Android signing keystore (non-interactive, CI)
-pnpm build:android          # Build Android APK (arm64, signed if keystore exists)
+cd app && pnpm install        # Install dependencies
+cd app && pnpm tauri dev      # Start dev server
+cd app && pnpm tauri build    # Build for production
+pnpm lint                     # Lint and format code (from root)
+pnpm lint:fix                 # Lint and auto-fix
+cd app && pnpm test           # Run tests
+cd app && pnpm analyze        # Analyze bundle size
+pnpm commitlint               # Check commit message against conventional commits
+cd app && pnpm generate:keystore      # Generate Android signing keystore (interactive)
+cd app && pnpm generate:keystore:ci   # Generate Android signing keystore (non-interactive, CI)
+cd app && pnpm build:android          # Build Android APK (arm64, signed if keystore exists)
 ```
 
-### Scaffold
+### Server
 
 ```bash
-node scripts/generate-feature.mjs <name>  # Generate a new feature module
+cd server
+cp .env.example .env
+cargo run  # Start axum server (requires PostgreSQL running)
 ```
 
 ### Docker
 
 ```bash
-docker compose up  # Start dev environment in container
+docker compose up  # Start PostgreSQL + optional dev container
+```
+
+### Cargo Workspace
+
+```bash
+cargo build --workspace  # Build all Rust crates
+cargo test --workspace   # Test all Rust crates
 ```
 
 ## Coding Standards
@@ -110,7 +121,7 @@ fn command_name(arg1: &str) -> String {
 
 ---
 
-## Frontend Module (src)
+## Frontend Module (app/src)
 
 ### Responsibilities
 
@@ -118,14 +129,14 @@ UI rendering, interaction, and styling. Built with React 19 + TypeScript + Tailw
 
 ### Entry Points
 
-- **Entry**: `src/main.tsx` delegates to `src/app/main.tsx`
-- **Router**: `src/app/router.tsx` builds TanStack Router from `src/routes/builders/build-route-tree.tsx`
-- **Routes**: `src/routes/__root.tsx` — root layout with AppProviders (theme, query persistence, toaster, Suspense) and desktop window preload wiring
-- **Route Metadata**: `src/routes/registry/route-registry.ts` — source of truth for route path, nav metadata, and desktop/mobile open behavior
-- **Shell**: `src/app/shell/` contains shared desktop/mobile shell UI, shell primitives, and shell-specific hooks
-- **Provider Adapters**: `src/providers/` contains cross-cutting context adapters such as theming
-- **Features**: `src/features/home/`, `src/features/tasks/`, `src/features/profile/`, `src/features/settings/`, `src/features/about/`
-- **Build Tool**: Vite (`vite.config.ts`) with `manualChunks` splitting vendor/router/ui
+- **Entry**: `app/src/main.tsx` delegates to `app/src/app/main.tsx`
+- **Router**: `app/src/app/router.tsx` builds TanStack Router from `app/src/routes/builders/build-route-tree.tsx`
+- **Routes**: `app/src/routes/__root.tsx` — root layout with AppProviders (theme, query persistence, toaster, Suspense) and desktop window preload wiring
+- **Route Metadata**: `app/src/routes/registry/route-registry.ts` — source of truth for route path, nav metadata, and desktop/mobile open behavior
+- **Shell**: `app/src/app/shell/` contains shared desktop/mobile shell UI, shell primitives, and shell-specific hooks
+- **Provider Adapters**: `app/src/providers/` contains cross-cutting context adapters such as theming
+- **Features**: `app/src/features/home/`, `app/src/features/tasks/`, `app/src/features/profile/`, `app/src/features/settings/`, `app/src/features/about/`
+- **Build Tool**: Vite (`app/vite.config.ts`) with `manualChunks` splitting vendor/router/ui
 
 ### Key Dependencies
 
@@ -242,7 +253,7 @@ node scripts/generate-feature.mjs <name>
 ```
 Then register route in `route-registry.ts` and `build-route-tree.tsx`.
 
-### File Structure
+### File Structure (app/src)
 
 ```
 src/
@@ -289,10 +300,12 @@ src/
 - `providers/` — reusable context adapters consumed across app, features, and UI
 - `app/` — top-level composition, shell layout, shell primitives, provider assembly
 - `features/` — application capabilities owned per module (command palette, updater, settings, etc.)
+- `types/` — shared Rust domain models used across `app/src-tauri` and `server`
+- `server/` — axum REST API, PostgreSQL migrations, routes, and business logic
 
 ---
 
-## Backend Module (src-tauri)
+## Backend Module (app/src-tauri)
 
 ### Responsibilities
 
@@ -300,9 +313,9 @@ System-level calls, native features, cross-platform desktop app wrapper.
 
 ### Entry Points
 
-- **Entry**: `src-tauri/src/main.rs`
-- **App Logic**: `src-tauri/src/lib.rs`
-- **Build Config**: `Cargo.toml`
+- **Entry**: `app/src-tauri/src/main.rs`
+- **App Logic**: `app/src-tauri/src/lib.rs`
+- **Build Config**: `app/src-tauri/Cargo.toml`
 
 ### Commands
 
@@ -325,7 +338,7 @@ fn start_background_task(app: tauri::AppHandle) -> Result<(), String> {
 }
 ```
 
-Frontend uses `listen()` from `@tauri-apps/api/event` to receive events. See `src/api/task.ts` and `src/features/home/components/task-demo.tsx`.
+Frontend uses `listen()` from `@tauri-apps/api/event` to receive events. See `app/src/api/task.ts` and `app/src/features/home/components/task-demo.tsx`.
 
 ### Key Dependencies
 
@@ -335,8 +348,8 @@ Frontend uses `listen()` from `@tauri-apps/api/event` to receive events. See `sr
 
 ### Configuration
 
-- `tauri.conf.json` - Tauri app config
-- `capabilities/default.json` - Permissions config
+- `app/src-tauri/tauri.conf.json` - Tauri app config
+- `app/src-tauri/capabilities/default.json` - Permissions config
 
 **Key Settings**:
 
