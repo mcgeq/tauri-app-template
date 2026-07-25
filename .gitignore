@@ -51,3 +51,6 @@ target/
 
 # Environment
 .env
+
+# Windows reserved device names
+nul

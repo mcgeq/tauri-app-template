@@ -1,10 +1,10 @@
 pub mod notes;
 
 use axum::Router;
-use sqlx::PgPool;
+use sea_orm::DatabaseConnection;
 
-pub fn create_router(pool: PgPool) -> Router {
+pub fn create_router(db: DatabaseConnection) -> Router {
     Router::new()
         .nest("/api/notes", notes::routes())
-        .with_state(pool)
+        .with_state(db)
 }

@@ -7,7 +7,7 @@ use serde_json::json;
 #[allow(dead_code)]
 pub enum AppError {
     #[error("Database error: {0}")]
-    Database(#[from] sqlx::Error),
+    Database(#[from] sea_orm::DbErr),
 
     #[error("Not found: {0}")]
     NotFound(String),

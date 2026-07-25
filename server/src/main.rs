@@ -1,5 +1,6 @@
 mod config;
 mod db;
+mod entity;
 mod error;
 mod routes;
 
@@ -18,11 +19,11 @@ async fn main() {
     dotenvy::dotenv().ok();
 
     let config = config::AppConfig::from_env();
-    let pool = db::connect(&config.database_url)
+    let db = db::connect(&config.database_url)
         .await
         .expect("Failed to connect to database");
 
-    let app = routes::create_router(pool)
+    let app = routes::create_router(db)
         .layer(TraceLayer::new_for_http())
         .layer(CorsLayer::permissive());
 

@@ -1,13 +1,5 @@
-use sqlx::postgres::PgPoolOptions;
-use sqlx::PgPool;
+use sea_orm::{Database, DatabaseConnection};
 
-pub async fn connect(database_url: &str) -> Result<PgPool, sqlx::Error> {
-    let pool = PgPoolOptions::new()
-        .max_connections(10)
-        .connect(database_url)
-        .await?;
-
-    sqlx::migrate!("./migrations").run(&pool).await?;
-
-    Ok(pool)
+pub async fn connect(database_url: &str) -> Result<DatabaseConnection, sea_orm::DbErr> {
+    Database::connect(database_url).await
 }
