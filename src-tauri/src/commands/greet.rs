@@ -5,10 +5,7 @@ use tracing::{info, instrument};
 #[instrument]
 pub fn greet(name: &str) -> Result<String, AppError> {
     info!(name = %name, "Greeting requested");
-    Ok(format!(
-        "Hello, {}! You've been greeted from Rust!",
-        name
-    ))
+    Ok(format!("Hello, {}! You've been greeted from Rust!", name))
 }
 
 #[cfg(test)]

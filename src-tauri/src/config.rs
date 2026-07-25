@@ -35,7 +35,11 @@ impl Config {
         }
 
         CONFIG
-            .set(Config { data_dir, log_dir, config_dir })
+            .set(Config {
+                data_dir,
+                log_dir,
+                config_dir,
+            })
             .map_err(|_| AppError::Config("Config already initialized".into()))
     }
 }
@@ -68,7 +72,11 @@ fn get_app_data_dir<R: Runtime>(app: &AppHandle<R>) -> Result<PathBuf, AppError>
 
     #[cfg(not(any(target_os = "ios", target_os = "android")))]
     {
-        Ok(app.path().data_dir()?.join(".tauri-app-template").join("data"))
+        Ok(app
+            .path()
+            .data_dir()?
+            .join(".tauri-app-template")
+            .join("data"))
     }
 }
 

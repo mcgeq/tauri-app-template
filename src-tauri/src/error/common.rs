@@ -10,7 +10,10 @@ pub enum AppError {
     Config(String),
 
     #[error("IO error at {path}: {source}")]
-    Io { path: PathBuf, source: std::io::Error },
+    Io {
+        path: PathBuf,
+        source: std::io::Error,
+    },
 
     #[error("Notification error: {0}")]
     Notification(String),
@@ -27,7 +30,8 @@ impl AppError {
     pub fn user_message(&self) -> String {
         match self {
             AppError::Io { path, source: _ } => {
-                let file = path.file_name()
+                let file = path
+                    .file_name()
                     .map(|n| n.to_string_lossy())
                     .unwrap_or_default();
                 format!("IO error: {file}")

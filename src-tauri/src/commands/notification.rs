@@ -6,15 +6,10 @@ use crate::error::AppError;
 
 #[tauri::command]
 #[instrument(skip(app))]
-pub fn send_notification(
-    app: AppHandle,
-    title: String,
-    body: String,
-) -> Result<(), AppError> {
+pub fn send_notification(app: AppHandle, title: String, body: String) -> Result<(), AppError> {
     info!(title = %title, "Sending notification");
 
-    app
-        .notification()
+    app.notification()
         .builder()
         .title(title)
         .body(body)

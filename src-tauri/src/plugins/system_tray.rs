@@ -49,13 +49,7 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                 &[
                     &MenuItem::with_id(app, MENU_ID_SHOW, "Show Window", true, None::<&str>)?,
                     &PredefinedMenuItem::separator(app)?,
-                    &MenuItem::with_id(
-                        app,
-                        MENU_ID_SETTINGS,
-                        "Settings",
-                        true,
-                        None::<&str>,
-                    )?,
+                    &MenuItem::with_id(app, MENU_ID_SETTINGS, "Settings", true, None::<&str>)?,
                     &PredefinedMenuItem::separator(app)?,
                     &MenuItem::with_id(app, MENU_ID_QUIT, "Quit", true, None::<&str>)?,
                 ],

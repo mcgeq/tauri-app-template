@@ -12,7 +12,10 @@ pub struct DailyFileWriter {
 
 impl DailyFileWriter {
     pub fn new(dir: PathBuf, prefix: &str) -> Self {
-        Self { dir, prefix: prefix.to_string() }
+        Self {
+            dir,
+            prefix: prefix.to_string(),
+        }
     }
 }
 
@@ -29,11 +32,7 @@ impl<'a> MakeWriter<'a> for DailyFileWriter {
             return Box::new(std::io::stderr());
         }
 
-        match fs::OpenOptions::new()
-            .create(true)
-            .append(true)
-            .open(&path)
-        {
+        match fs::OpenOptions::new().create(true).append(true).open(&path) {
             Ok(file) => Box::new(file),
             Err(e) => {
                 eprintln!("Failed to open log file {path:?}: {e:?}, falling back to stderr");

@@ -1,5 +1,5 @@
-use std::sync::RwLock;
 use std::sync::atomic::AtomicBool;
+use std::sync::RwLock;
 
 use crate::services::window_behavior_service::WindowBehaviorConfig;
 

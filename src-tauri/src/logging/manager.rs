@@ -8,8 +8,7 @@ use crate::error::AppError;
 pub fn init_tracing_subscriber(config: &LogConfig) -> Result<(), AppError> {
     let tracing_dir = crate::config::Config::get()?.log_dir.join("tracing");
 
-    let env_filter = EnvFilter::try_new(&config.level)
-        .unwrap_or_else(|_| EnvFilter::new("info"));
+    let env_filter = EnvFilter::try_new(&config.level).unwrap_or_else(|_| EnvFilter::new("info"));
 
     // Console layer: human-readable compact format with RFC 3339 timestamps
     let console_layer = fmt::Layer::default()
@@ -38,8 +37,9 @@ pub fn init_tracing_subscriber(config: &LogConfig) -> Result<(), AppError> {
         .with(app_layer)
         .with(error_layer);
 
-    tracing::subscriber::set_global_default(subscriber)
-        .map_err(|error| AppError::Generic(format!("Failed to set global tracing subscriber: {error}")))?;
+    tracing::subscriber::set_global_default(subscriber).map_err(|error| {
+        AppError::Generic(format!("Failed to set global tracing subscriber: {error}"))
+    })?;
 
     Ok(())
 }

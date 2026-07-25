@@ -90,8 +90,7 @@ pub fn with_desktop_plugins(builder: tauri::Builder<tauri::Wry>) -> tauri::Build
 
 #[cfg(mobile)]
 pub fn with_mobile_plugins(builder: tauri::Builder<tauri::Wry>) -> tauri::Builder<tauri::Wry> {
-    builder
-        .plugin(tauri_plugin_notification::init())
+    builder.plugin(tauri_plugin_notification::init())
 }
 
 pub fn with_commands(builder: tauri::Builder<tauri::Wry>) -> tauri::Builder<tauri::Wry> {

@@ -50,17 +50,19 @@ fn config_path() -> Result<PathBuf, AppError> {
 fn read_state(
     state: &AppState,
 ) -> Result<std::sync::RwLockReadGuard<'_, WindowBehaviorConfig>, AppError> {
-    state.window_behavior.read().map_err(|_| {
-        AppError::Generic("Window behavior state read lock poisoned".into())
-    })
+    state
+        .window_behavior
+        .read()
+        .map_err(|_| AppError::Generic("Window behavior state read lock poisoned".into()))
 }
 
 fn write_state(
     state: &AppState,
 ) -> Result<std::sync::RwLockWriteGuard<'_, WindowBehaviorConfig>, AppError> {
-    state.window_behavior.write().map_err(|_| {
-        AppError::Generic("Window behavior state write lock poisoned".into())
-    })
+    state
+        .window_behavior
+        .write()
+        .map_err(|_| AppError::Generic("Window behavior state write lock poisoned".into()))
 }
 
 fn load_config_from_disk() -> Result<WindowBehaviorConfig, AppError> {
@@ -83,8 +85,11 @@ fn load_config_from_disk() -> Result<WindowBehaviorConfig, AppError> {
 
 fn persist_config(config: &WindowBehaviorConfig) -> Result<(), AppError> {
     let path = config_path()?;
-    let contents = serde_json::to_vec_pretty(config)
-        .map_err(|error| AppError::Config(format!("Failed to serialize window behavior config: {error}")))?;
+    let contents = serde_json::to_vec_pretty(config).map_err(|error| {
+        AppError::Config(format!(
+            "Failed to serialize window behavior config: {error}"
+        ))
+    })?;
 
     fs::write(&path, contents).map_err(|source| AppError::Io { path, source })
 }

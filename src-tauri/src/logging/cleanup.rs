@@ -1,7 +1,7 @@
 use std::fs;
 
-use chrono::{Duration, Local, NaiveDate};
 use crate::error::AppError;
+use chrono::{Duration, Local, NaiveDate};
 
 /// Remove log files under `{log_dir}/tracing/` older than `max_days`.
 /// File format: `app.2025-06-07.log` or `error.2025-06-07.log`.
@@ -30,9 +30,7 @@ pub fn cleanup_old_logs(max_days: i64) -> Result<(), AppError> {
         };
 
         // Extract date from filename like "app.2025-06-07.log"
-        let date_str = name
-            .strip_suffix(".log")
-            .and_then(|n| n.rsplit('.').next());
+        let date_str = name.strip_suffix(".log").and_then(|n| n.rsplit('.').next());
         if let Some(date_str) = date_str {
             if let Ok(date) = NaiveDate::parse_from_str(date_str, "%Y-%m-%d") {
                 if date < cutoff {
