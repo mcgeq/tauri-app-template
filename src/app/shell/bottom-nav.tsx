@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from '@tanstack/react-router';
 import { Home, Info, List, Settings, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
-import { getNavRoutes } from '@/routes/registry/route-navigation';
+import { getNavRoutes } from '@/routes/registry/route-registry';
 
 const iconMap: Record<NavIconKey, typeof Home> = {
   home: Home,

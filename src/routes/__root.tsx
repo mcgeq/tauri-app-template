@@ -2,12 +2,13 @@ import { createRootRoute, Outlet, useNavigate } from '@tanstack/react-router';
 import { getCurrentWebviewWindow, WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { AppProviders } from '@/app/providers/app-providers';
+import { useWindowMaximized } from '@/app/shell/hooks/use-window-maximized';
 import { Loading } from '@/components/loading';
 import { cn } from '@/lib/utils';
 import { IS_DESKTOP } from '@/platform/runtime/platform';
 import { buildWebviewWindowOptions } from '@/platform/windows/webview-window-options';
 import { setNavigateFn } from '@/platform/windows/window-navigation-bridge';
-import { getPreloadableDesktopWindows } from '@/routes/registry/route-window-meta';
+import { getPreloadableDesktopWindows } from '@/routes/registry/route-registry';
 import { useWindowBehaviorSync } from '@/stores/window-behavior';
 import '@/i18n';
 
@@ -19,6 +20,7 @@ export const Route = createRootRoute({
 
 function RootLayout() {
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const { isMaximized } = useWindowMaximized();
   useWindowBehaviorSync();
   const navigate = useNavigate();
 
@@ -74,7 +76,8 @@ function RootLayout() {
     <AppProviders>
       <div
         className={cn(
-          'bg-background flex h-full min-h-[100vh] min-w-0 flex-col',
+          'bg-background flex h-full min-h-[100vh] min-w-0 flex-col overflow-hidden',
+          IS_DESKTOP && !isMaximized ? 'rounded-lg' : '',
         )}
       >
         <div

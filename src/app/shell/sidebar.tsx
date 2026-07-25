@@ -4,7 +4,7 @@ import { Info, LayoutDashboard, Settings, Timer, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { getNavRoutes } from '@/routes/registry/route-navigation';
+import { getNavRoutes } from '@/routes/registry/route-registry';
 
 export type Section = 'home' | 'tasks' | 'profile';
 

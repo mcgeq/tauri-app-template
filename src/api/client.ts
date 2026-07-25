@@ -1,11 +1,5 @@
 import { invoke } from '@tauri-apps/api/core';
 
-interface ApiResponse<T> {
-  success: boolean;
-  data?: T;
-  message?: string;
-}
-
 export interface InvokeCommandOptions {
   timeoutMs?: number;
 }
@@ -29,16 +23,7 @@ export async function invokeCommand<T>(
   options: InvokeCommandOptions = {},
 ): Promise<T> {
   const timeoutMs = options.timeoutMs ?? DEFAULT_TIMEOUT_MS;
-  const invokePromise = invoke<ApiResponse<T>>(command, args)
-    .then((resp) => {
-      if (!resp.success) {
-        throw new CommandError(
-          resp.message ?? `Command "${command}" failed`,
-          command,
-        );
-      }
-      return resp.data as T;
-    });
+  const invokePromise = invoke<T>(command, args);
 
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
   const timeoutPromise = new Promise<never>((_, reject) => {

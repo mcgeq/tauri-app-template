@@ -22,6 +22,21 @@ pub enum AppError {
     Tauri(String),
 }
 
+impl AppError {
+    /// Safe message for the frontend — internal paths are sanitized.
+    pub fn user_message(&self) -> String {
+        match self {
+            AppError::Io { path, source: _ } => {
+                let file = path.file_name()
+                    .map(|n| n.to_string_lossy())
+                    .unwrap_or_default();
+                format!("IO error: {file}")
+            }
+            _ => self.to_string(),
+        }
+    }
+}
+
 impl From<String> for AppError {
     fn from(s: String) -> Self {
         AppError::Generic(s)
@@ -51,6 +66,6 @@ impl From<tauri::Error> for AppError {
 
 impl serde::Serialize for AppError {
     fn serialize<S: serde::Serializer>(&self, serializer: S) -> Result<S::Ok, S::Error> {
-        serializer.serialize_str(&self.to_string())
+        serializer.serialize_str(&self.user_message())
     }
 }

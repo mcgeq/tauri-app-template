@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
-import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
-import { useEffect, useState } from 'react';
+import { useWindowMaximized } from '@/app/shell/hooks/use-window-maximized';
 import { cn } from '@/lib/utils';
 import { IS_DESKTOP, IS_TAURI_APP } from '@/platform/runtime/platform';
 import { useCompactLayout } from '@/platform/runtime/use-compact-layout';
@@ -20,28 +19,10 @@ export function WindowFrame({
   contentClassName,
   mobileSafeArea = 'all',
 }: WindowFrameProps) {
-  const [isMaximized, setIsMaximized] = useState(false);
+  const { isMaximized } = useWindowMaximized();
   const isMobile = useCompactLayout();
   const isTauri = IS_TAURI_APP;
   const showDesktopChrome = IS_DESKTOP && (isTauri || !isMobile);
-
-  useEffect(() => {
-    if (!IS_DESKTOP || !isTauri) {
-      return;
-    }
-    const appWindow = getCurrentWebviewWindow();
-
-    appWindow.isMaximized().then(setIsMaximized);
-
-    const unlistenResize = appWindow.onResized(async () => {
-      const maximized = await appWindow.isMaximized();
-      setIsMaximized(maximized);
-    });
-
-    return () => {
-      unlistenResize.then(fn => fn());
-    };
-  }, [isTauri]);
 
   return (
     <div

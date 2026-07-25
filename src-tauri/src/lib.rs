@@ -9,7 +9,6 @@ mod platform;
 #[cfg(desktop)]
 mod plugins;
 
-mod response;
 mod services;
 mod state;
 

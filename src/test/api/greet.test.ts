@@ -11,10 +11,7 @@ describe('greet API', () => {
   });
 
   it('calls greet command with name', async () => {
-    (invoke as ReturnType<typeof vi.fn>).mockResolvedValue({
-      success: true,
-      data: 'Hello, World!',
-    });
+    (invoke as ReturnType<typeof vi.fn>).mockResolvedValue('Hello, World!');
 
     const result = await greet('World');
 

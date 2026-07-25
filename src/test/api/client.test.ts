@@ -11,10 +11,7 @@ describe('invokeCommand', () => {
   });
 
   it('returns data on successful response', async () => {
-    (invoke as ReturnType<typeof vi.fn>).mockResolvedValue({
-      success: true,
-      data: 'hello',
-    });
+    (invoke as ReturnType<typeof vi.fn>).mockResolvedValue('hello');
 
     const result = await invokeCommand<string>('greet', { name: 'test' });
 
@@ -22,22 +19,12 @@ describe('invokeCommand', () => {
     expect(invoke).toHaveBeenCalledWith('greet', { name: 'test' });
   });
 
-  it('returns undefined when no data field', async () => {
-    (invoke as ReturnType<typeof vi.fn>).mockResolvedValue({ success: true });
+  it('returns undefined for void commands', async () => {
+    (invoke as ReturnType<typeof vi.fn>).mockResolvedValue(undefined);
 
     const result = await invokeCommand('noop');
 
     expect(result).toBeUndefined();
-  });
-
-  it('throws CommandError on unsuccessful response', async () => {
-    (invoke as ReturnType<typeof vi.fn>).mockResolvedValue({
-      success: false,
-      message: 'something went wrong',
-    });
-
-    await expect(invokeCommand('fail')).rejects.toThrow(CommandError);
-    await expect(invokeCommand('fail')).rejects.toThrow(/something went wrong/);
   });
 
   it('throws CommandError on invoke exception', async () => {

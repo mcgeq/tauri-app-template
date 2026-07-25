@@ -20,7 +20,6 @@ export default defineConfig(async ({ mode }) => {
       AutoImport({
         imports: ['react'],
         dts: 'src/auto-imports.d.ts',
-        dirs: ['src/hooks', 'src/lib', 'src/platform/runtime', 'src/platform/windows'],
         include: [/\.[tj]sx?$/],
         exclude: [/node_modules/, /\.git/, /src-tauri/],
       }),
