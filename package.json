@@ -99,11 +99,6 @@
     "vite": "^8.0.16",
     "vitest": "^4.1.8"
   },
-  "pnpm": {
-    "overrides": {
-      "@tauri-apps/api": "2.11.0"
-    }
-  },
   "simple-git-hooks": {
     "pre-commit": "pnpm lint-staged && cd src-tauri && cargo fmt --check 2>nul || (echo Warning: Rust formatting check failed. Run cargo fmt to fix. & exit 0)",
     "commit-msg": "pnpm commitlint --edit ${1}"
