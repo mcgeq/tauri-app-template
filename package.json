@@ -97,7 +97,7 @@
     "vitest": "^4.1.8"
   },
   "simple-git-hooks": {
-    "pre-commit": "pnpm lint-staged && cd app/src-tauri && cargo fmt --check 2>$null || (echo Warning: Rust formatting check failed. Run cargo fmt to fix. & exit 0)",
+    "pre-commit": "pnpm lint-staged && cd src-tauri && cargo fmt --check 2>$null || (echo Warning: Rust formatting check failed. Run cargo fmt to fix. & exit 0)",
     "commit-msg": "pnpm commitlint --edit ${1}"
   },
   "lint-staged": {
