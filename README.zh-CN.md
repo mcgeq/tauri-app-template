@@ -9,7 +9,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
 
-基于 Tauri v2 + React 19 + TypeScript + shadcn/ui 的 Windows 优先桌面端模板，并提供 Android 开发支持。
+基于 Tauri v2 + React 19 + TypeScript + shadcn/ui 和 Rust + axum + PostgreSQL 的全栈模板，Windows 优先桌面端应用，并提供 Android 开发支持。
 
 </div>
 
@@ -49,6 +49,7 @@
 - 🧪 **测试** — Vitest + Testing Library
 - 📊 **包体积分析** — rollup-plugin-visualizer
 - 🦀 **生产级 Rust 后端** — 模块化结构（`commands/`、`error/`、`logging/`、`models/`、`plugins/`、`services/`）、`thiserror` 错误类型、`tracing` 埋点、Cargo workspace 模式
+- 🖥️ **REST API 服务端** — axum + sea-orm + PostgreSQL，支持自动迁移、CORS、结构化错误处理和集成测试
 - 📝 **结构化日志** — `tracing-subscriber` + `EnvFilter`，控制台输出
 
 ### DevOps
@@ -83,6 +84,10 @@
 - **动画**: [motion](https://motion.dev/)
 - **通知**: [sonner](https://sonner.emilkowal.ski/)（Toast）+ `tauri-plugin-notification`（原生）
 - **日志**: [tracing](https://docs.rs/tracing/) + `tracing-subscriber`
+- **服务端框架**: [axum](https://github.com/tokio-rs/axum)
+- **ORM**: [Sea-ORM](https://www.sea-ql.org/SeaORM/)
+- **数据库**: [PostgreSQL](https://www.postgresql.org/)
+- **容器**: [Docker](https://www.docker.com/)
 - **代码规范**: [ESLint (antfu/eslint-config)](https://github.com/antfu/eslint-config)
 
 ## 快速开始
@@ -94,6 +99,7 @@
 | Node.js | 25 |
 | pnpm | 10 |
 | Rust | 1.92 |
+| Docker | 24+ |
 
 ### 安装
 
@@ -126,6 +132,21 @@ pnpm build:android:debug
 
 首次构建 Android，或者删除 / 重生成 `src-tauri/gen/android` 后，先执行一次 `pnpm tauri android init`。如果整个生成目录不存在，`build.ps1` 也会自动尝试初始化。
 
+### 服务端
+
+```bash
+docker compose up -d postgres  # 后台启动 PostgreSQL
+pnpm server                     # 启动 axum 服务端（默认 http://localhost:3000）
+```
+
+服务端需要运行中的 PostgreSQL 实例。使用 Docker 是最快的启动方式，也可以将 `server/.env` 指向任意 PostgreSQL 17 数据库。
+
+### Docker
+
+```bash
+docker compose up  # 启动 PostgreSQL + 可选开发容器
+```
+
 ## 脚本
 
 | 命令 | 说明 |
@@ -134,17 +155,20 @@ pnpm build:android:debug
 | `pnpm build` | TypeScript 检查 + Vite 生产构建 |
 | `pnpm lint` | 运行 linter |
 | `pnpm lint:fix` | Lint 并自动修复 |
-| `pnpm test` | 运行测试（Vitest） |
-| `pnpm test:watch` | 监听模式 |
-| `pnpm coverage` | 测试覆盖率报告 |
-| `pnpm analyze` | 包体积分析 |
-| `pnpm changelog` | 从 conventional commits 自动生成 CHANGELOG |
+| `pnpm server` | 启动 axum 服务端（需要 PostgreSQL） |
+| `pnpm tauri dev` | 启动 Tauri 桌面应用（热重载） |
+| `pnpm tauri build` | 构建 Tauri 桌面应用 |
 | `pnpm release:version` | 版本发布流程（见下方） |
-| `pnpm check:all` | 一次性运行 lint、Vitest、前端构建与 Rust 测试 |
-| `pnpm build:win` | 通过 `build.ps1` 构建 Windows |
-| `pnpm build:android` | 通过 `build.ps1` 构建 Android |
-| `pnpm build:android:debug` | 通过 `build.ps1` 构建 Android 调试 APK |
-| `pnpm build:clean` | 通过 `build.ps1` 清理构建产物 |
+| `pnpm check:all` | 一次性运行 lint、测试、前端构建与 Rust 测试 |
+| `cd app && pnpm test` | 运行 Vitest 测试 |
+| `cd app && pnpm analyze` | 包体积分析 |
+| `cd app && pnpm changelog` | 从 conventional commits 自动生成 CHANGELOG |
+| `cd app && pnpm build:win` | 通过 `build.ps1` 构建 Windows |
+| `cd app && pnpm build:android` | 通过 `build.ps1` 构建 Android |
+| `cd app && pnpm build:clean` | 通过 `build.ps1` 清理构建产物 |
+| `cargo build --workspace` | 构建所有 Rust crate |
+| `cargo test --workspace` | 测试所有 Rust crate |
+| `docker compose up` | 启动 PostgreSQL + 开发容器 |
 
 ## 版本管理
 
@@ -171,7 +195,7 @@ pnpm release:version 0.1.0 --dry-run  # 仅预览
 **前置检查：**
 
 - 工作区干净，当前分支为 `main`
-- 版本文件一致：`package.json`、`tauri.conf.json`、`Cargo.toml`、`Cargo.lock`
+- 版本文件一致：`app/package.json`、`app/src-tauri/tauri.conf.json`、`app/src-tauri/Cargo.toml`、`Cargo.lock`
 - 目标 tag 不存在于本地或远端 `origin`
 
 **关卡（在修改文件前执行）：**
@@ -182,7 +206,7 @@ pnpm release:version 0.1.0 --dry-run  # 仅预览
 **执行操作：**
 
 - 从 conventional commits 自动生成 CHANGELOG 章节
-- 同步更新 `package.json`、`tauri.conf.json`、`Cargo.toml`、`Cargo.lock`
+- 同步更新 `app/package.json`、`app/src-tauri/tauri.conf.json`、`app/src-tauri/Cargo.toml`、`Cargo.lock`
 - 创建发布提交和 `vX.Y.Z` tag
 - 可选推送分支和 tag
 
@@ -190,70 +214,101 @@ pnpm release:version 0.1.0 --dry-run  # 仅预览
 
 ```
 .
-├── src/                    # 前端源码
-│   ├── app/               # 应用装配层（挂载、路由、providers、shell）
-│   ├── assets/            # 静态资源（图标、Logo）
-│   ├── api/               # Tauri 命令封装（类型化的服务函数）
-│   ├── components/        # 共享 React 组件
-│   │   ├── ui/           # shadcn/ui 组件
-│   │   ├── command-palette.tsx  # Ctrl+K 命令面板
-│   │   ├── theme-provider.tsx   # next-themes 封装
-│   │   └── title-bar.tsx        # 自定义无边框标题栏
-│   ├── features/          # 功能模块
-│   │   ├── about/         # 关于页 / 子窗口
-│   │   ├── home/          # 主页面、任务示例、桌面壳层切换
-│   │   ├── profile/       # 移动端“我的”页，以及设置 / 关于入口
-│   │   └── settings/      # 设置页 / 子窗口（主题、语言、窗口行为、快捷键）
-│   ├── hooks/             # 共享自定义 Hook
-│   ├── i18n/              # 国际化
-│   │   └── locales/       # 翻译文件（中/英）
-│   ├── lib/               # 工具函数和常量
-│   ├── platform/          # runtime / Tauri / 桌面窗口平台辅助代码
-│   ├── routes/            # TanStack Router 路由定义与路由元数据注册表
-│   └── stores/            # Zustand 状态仓库
-├── src-tauri/             # Tauri/Rust 后端
+├── app/                    # 桌面应用（前端 + Tauri）
+│   ├── src/               # 前端源码
+│   │   ├── app/           # 应用装配层（挂载、路由、providers、shell）
+│   │   ├── assets/        # 静态资源（图标、Logo）
+│   │   ├── api/           # Tauri 命令封装（类型化的服务函数）
+│   │   ├── components/    # 共享 React 组件
+│   │   │   └── ui/       # shadcn/ui 组件
+│   │   ├── features/      # 功能模块
+│   │   │   ├── about/     # 关于页 / 子窗口
+│   │   │   ├── command-palette/# Ctrl+K 命令面板
+│   │   │   ├── home/      # 主页面、桌面壳层切换
+│   │   │   ├── profile/   # 移动端"我的"页
+│   │   │   ├── settings/  # 设置页 / 子窗口（主题、语言、窗口行为、快捷键）
+│   │   │   ├── tasks/     # 后台任务演示 / 笔记演示
+│   │   │   └── updater/   # 更新检测与安装 UX
+│   │   ├── hooks/         # 共享自定义 Hook
+│   │   ├── i18n/          # 国际化
+│   │   │   └── locales/   # 翻译文件（中/英）
+│   │   ├── lib/           # 工具函数和常量
+│   │   ├── platform/      # runtime / Tauri / 桌面窗口平台辅助代码
+│   │   ├── providers/     # 跨层上下文适配器（主题、query 持久化）
+│   │   ├── routes/        # TanStack Router 路由定义与路由元数据注册表
+│   │   ├── stores/        # Zustand 状态仓库
+│   │   └── test/          # 测试设置与测试文件
+│   ├── src-tauri/         # Tauri/Rust 后端
+│   │   ├── src/
+│   │   │   ├── main.rs    # 入口
+│   │   │   ├── lib.rs     # 应用配置、插件初始化、命令注册
+│   │   │   ├── app.rs + app/              # 应用启动、配置、共享状态
+│   │   │   ├── commands.rs + commands/  # Tauri 命令（greet、task、notification、config、tray、notes）
+│   │   │   ├── config.rs                # 兼容导出的配置模块
+│   │   │   ├── error.rs + error/        # 自定义错误类型（thiserror、serde）
+│   │   │   ├── logging.rs + logging/    # tracing-subscriber + EnvFilter
+│   │   │   ├── models.rs + models/      # Serde 结构体（任务进度等）
+│   │   │   ├── platform.rs + platform/  # 桌面平台集成（托盘、窗口规则）
+│   │   │   ├── plugins.rs + plugins/    # 插件封装
+│   │   │   ├── response.rs              # API 响应辅助
+│   │   │   ├── services.rs + services/  # 服务层
+│   │   │   └── state.rs                 # 兼容导出的状态模块
+│   │   ├── capabilities/  # Tauri 权限配置
+│   │   └── tauri.conf.json# Tauri 配置
+│   ├── scripts/           # 构建与发布脚本
+│   ├── build.ps1          # 多平台构建脚本（Windows、Android、清理）
+│   ├── components.json    # shadcn/ui 配置
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── vitest.config.ts
+│   └── tsconfig.json
+├── server/                # REST API 服务端
 │   ├── src/
-│   │   ├── main.rs        # 入口
-│   │   ├── lib.rs         # 应用配置、插件初始化、命令注册
-│   │   ├── app.rs + app/              # 应用启动、配置、共享状态
-│   │   ├── commands.rs + commands/  # Tauri 命令（greet、task、notification、config、tray）
-│   │   ├── config.rs                # 兼容导出的配置模块
-│   │   ├── error.rs + error/        # 自定义错误类型（thiserror、serde）
-│   │   ├── logging.rs + logging/    # tracing-subscriber + EnvFilter
-│   │   ├── models.rs + models/      # Serde 结构体（任务进度等）
-│   │   ├── platform.rs + platform/  # 桌面平台集成（托盘、窗口规则）
-│   │   ├── plugins.rs + plugins/    # 插件封装
-│   │   ├── response.rs              # API 响应辅助
-│   │   ├── services.rs + services/  # 服务层
-│   │   └── state.rs                 # 兼容导出的状态模块
-│   ├── crates/             # Cargo workspace 共享 crate
-│   ├── capabilities/      # Tauri 权限配置
-│   └── tauri.conf.json    # Tauri 配置
-├── scripts/               # 构建与发布脚本
-│   ├── changelog.mjs      # 从 git log 生成 CHANGELOG
-│   ├── generate-feature.mjs  # 脚手架生成新功能模块
-│   └── release-version.mjs  # 版本升级、changelog、提交、tag、推送
-├── build.ps1              # 多平台构建脚本（Windows、Android、清理）
+│   │   ├── main.rs        # 入口（axum）
+│   │   ├── lib.rs         # 模块导出
+│   │   ├── config.rs      # 环境变量配置
+│   │   ├── db.rs          # 数据库连接
+│   │   ├── error.rs       # 结构化错误类型
+│   │   └── routes/        # API 路由处理器
+│   ├── tests/             # 集成测试
+│   ├── .env.example
+│   └── Cargo.toml
+├── types/                 # 共享 Rust 领域模型
+│   ├── src/
+│   └── Cargo.toml
+├── entity/                # Sea-ORM 实体
+│   ├── src/
+│   └── Cargo.toml
+├── migration/             # 数据库迁移
+│   ├── src/
+│   └── Cargo.toml
 ├── docs/                  # 文档
 │   ├── AUTO_UPDATE.zh-CN.md # 自动更新指南
 │   ├── I18N.zh-CN.md      # 国际化指南
 │   └── GLOBAL_SHORTCUT.zh-CN.md # 全局快捷键指南
-├── components.json        # shadcn/ui 配置
-└── package.json
+├── .github/
+│   └── workflows/         # CI/CD 流水线
+├── docker-compose.yml     # PostgreSQL + 开发容器
+├── Cargo.toml             # Cargo workspace 配置
+├── package.json           # workspace 根
+├── pnpm-workspace.yaml
+└── README.md
 ```
 
 ## 架构约定
 
-- 路由语义与窗口元数据统一放在 `src/routes/registry/`
-- Router 装配统一放在 `src/app/router.tsx` 与 `src/routes/builders/`
-- Shell UI 统一放在 `src/app/shell/`
-- 平台/runtime 相关代码统一放在 `src/platform/`
+- 路由语义与窗口元数据统一放在 `app/src/routes/registry/`
+- Router 装配统一放在 `app/src/app/router.tsx` 与 `app/src/routes/builders/`
+- Shell UI 统一放在 `app/src/app/shell/`
+- 平台/runtime 相关代码统一放在 `app/src/platform/`
 - Rust 模块根使用 `app.rs`、`platform.rs`、`services.rs`，不使用 `mod.rs`
+- 共享 Rust 类型放在 `types/` crate 中，供 `app/src-tauri` 和 `server` 共同使用
+- 数据库实体放在 `entity/` crate，迁移放在 `migration/` crate
 
 ## Query 持久化
 
 - 稳定的只读查询可通过设置 `meta.persist = true` 选择性启用官方 TanStack 持久化
-- 持久化由 `src/app/providers/query-persistence.ts` 和 `PersistQueryClientProvider` 统一装配
+- 持久化由 `app/src/app/providers/query-persistence.ts` 和 `PersistQueryClientProvider` 统一装配
 - 只有显式标记的查询会被 dehydrate / restore
 - 持久化缓存的 buster 会跟随 `VITE_APP_VERSION` 变化，因此新版本发布后会自动失效旧缓存，避免结构不兼容
 

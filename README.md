@@ -9,7 +9,7 @@ English | [简体中文](./README.zh-CN.md)
 [![TypeScript](https://img.shields.io/badge/TypeScript-6.0-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/License-MIT-green)](./LICENSE)
 
-A modern Tauri v2 template for Windows-first desktop apps and Android development, built with React 19, TypeScript, and shadcn/ui.
+A modern full-stack Tauri v2 template for Windows-first desktop apps and Android development, built with React 19 + TypeScript + shadcn/ui and Rust + axum + PostgreSQL.
 
 </div>
 
@@ -49,6 +49,7 @@ A modern Tauri v2 template for Windows-first desktop apps and Android developmen
 - 🧪 **Testing** — Vitest + Testing Library
 - 📊 **Bundle Analysis** — rollup-plugin-visualizer
 - 🦀 **Production-Grade Rust Backend** — Modular structure (`commands/`, `error/`, `logging/`, `models/`, `plugins/`, `services/`), `thiserror` error types, `tracing` instrumentation, Cargo workspace mode
+- 🖥️ **REST API Server** — axum + sea-orm + PostgreSQL with auto-migrations, CORS, structured error handling, and integration tests
 - 📝 **Structured Logging** — `tracing-subscriber` with `EnvFilter`, console output
 
 ### DevOps
@@ -83,6 +84,10 @@ See [Support Matrix](./docs/SUPPORT_MATRIX.md) for the current target status.
 - **Animation**: [motion](https://motion.dev/)
 - **Notifications**: [sonner](https://sonner.emilkowal.ski/) (toast) + `tauri-plugin-notification` (native)
 - **Logging**: [tracing](https://docs.rs/tracing/) + `tracing-subscriber`
+- **Server Framework**: [axum](https://github.com/tokio-rs/axum)
+- **ORM**: [Sea-ORM](https://www.sea-ql.org/SeaORM/)
+- **Database**: [PostgreSQL](https://www.postgresql.org/)
+- **Container**: [Docker](https://www.docker.com/)
 - **Code Quality**: [ESLint (antfu/eslint-config)](https://github.com/antfu/eslint-config)
 
 ## Quick Start
@@ -94,6 +99,7 @@ See [Support Matrix](./docs/SUPPORT_MATRIX.md) for the current target status.
 | Node.js | 25 |
 | pnpm | 10 |
 | Rust | 1.92 |
+| Docker | 24+ |
 
 ### Setup
 
@@ -126,6 +132,21 @@ pnpm build:android:debug
 
 Use `pnpm tauri android init` once before the first Android build, or anytime `src-tauri/gen/android` has been deleted or needs to be regenerated. The PowerShell build script also auto-initializes Android when the generated project is completely missing.
 
+### Server
+
+```bash
+docker compose up -d postgres  # Start PostgreSQL in background
+pnpm server                     # Start axum server (default http://localhost:3000)
+```
+
+The server requires a running PostgreSQL instance. Use Docker for the quickest setup, or point `server/.env` at any PostgreSQL 17 database.
+
+### Docker
+
+```bash
+docker compose up  # Start PostgreSQL + optional dev container
+```
+
 ## Scripts
 
 | Command | Description |
@@ -134,17 +155,20 @@ Use `pnpm tauri android init` once before the first Android build, or anytime `s
 | `pnpm build` | TypeScript check + Vite production build |
 | `pnpm lint` | Run linter |
 | `pnpm lint:fix` | Lint and auto-fix |
-| `pnpm test` | Run tests (Vitest) |
-| `pnpm test:watch` | Watch mode |
-| `pnpm coverage` | Test coverage report |
-| `pnpm analyze` | Bundle size analysis |
-| `pnpm changelog` | Generate CHANGELOG.md from conventional commits |
+| `pnpm server` | Start axum server (requires PostgreSQL) |
+| `pnpm tauri dev` | Start Tauri desktop app with hot-reload |
+| `pnpm tauri build` | Build Tauri desktop app for production |
 | `pnpm release:version` | Version release workflow (see below) |
-| `pnpm check:all` | Run lint, Vitest, frontend build, and Rust tests together |
-| `pnpm build:win` | Windows Tauri build via `build.ps1` |
-| `pnpm build:android` | Android Tauri build via `build.ps1` |
-| `pnpm build:android:debug` | Android debug APK via `build.ps1` |
-| `pnpm build:clean` | Clean build artifacts via `build.ps1` |
+| `pnpm check:all` | Run lint, test, frontend build, and Rust tests |
+| `cd app && pnpm test` | Run Vitest tests |
+| `cd app && pnpm analyze` | Bundle size analysis |
+| `cd app && pnpm changelog` | Generate CHANGELOG.md from conventional commits |
+| `cd app && pnpm build:win` | Windows Tauri build via `build.ps1` |
+| `cd app && pnpm build:android` | Android Tauri build via `build.ps1` |
+| `cd app && pnpm build:clean` | Clean build artifacts via `build.ps1` |
+| `cargo build --workspace` | Build all Rust crates |
+| `cargo test --workspace` | Test all Rust crates |
+| `docker compose up` | Start PostgreSQL + dev container |
 
 ## Version Management
 
@@ -171,7 +195,7 @@ pnpm release:version 0.1.0 --dry-run  # Preview only
 **Preflight checks:**
 
 - Clean working tree, branch is `main`
-- Version files in sync: `package.json`, `tauri.conf.json`, `Cargo.toml`, `Cargo.lock`
+- Version files in sync: `app/package.json`, `app/src-tauri/tauri.conf.json`, `app/src-tauri/Cargo.toml`, `Cargo.lock`
 - Target tag does not exist locally or on `origin`
 
 **Gates (run before file modification):**
@@ -182,7 +206,7 @@ pnpm release:version 0.1.0 --dry-run  # Preview only
 **Actions:**
 
 - Generates CHANGELOG.md section from conventional commits
-- Updates version in `package.json`, `tauri.conf.json`, `Cargo.toml`, `Cargo.lock`
+- Updates version in `app/package.json`, `app/src-tauri/tauri.conf.json`, `app/src-tauri/Cargo.toml`, `Cargo.lock`
 - Creates release commit and `vX.Y.Z` tag
 - Optionally pushes branch and tag
 
@@ -190,72 +214,101 @@ pnpm release:version 0.1.0 --dry-run  # Preview only
 
 ```
 .
-├── src/                    # Frontend source code
-│   ├── app/               # App composition (mounting, router, providers, shell)
-│   ├── assets/            # Static assets (icons, logos)
-│   ├── api/               # Tauri command wrappers (typed service functions)
-│   ├── components/        # Shared React components (ui primitives, toaster, error boundary)
-│   │   └── ui/           # shadcn/ui components
-│   ├── features/          # Feature modules
-│   │   ├── about/         # About page / child window
-│   │   ├── command-palette/# Ctrl+K command palette
-│   │   ├── home/          # Main dashboard, desktop shell switching
-│   │   ├── profile/       # Mobile profile page and entry points for settings/about
-│   │   ├── settings/      # Settings page / child window (theme, language, window behavior, shortcuts)
-│   │   ├── tasks/         # Background task demo
-│   │   └── updater/       # Update detection and install UX
-│   ├── hooks/             # Shared custom hooks
-│   ├── i18n/              # Internationalization
-│   │   └── locales/       # Translation files (en, zh)
-│   ├── lib/               # Utility functions and constants
-│   ├── platform/          # Runtime / Tauri / desktop-window platform helpers
-│   ├── providers/         # Cross-cutting context adapters (theme, query persistence)
-│   ├── routes/            # TanStack Router route definitions + route metadata registry
-│   ├── stores/            # Zustand stores
-│   └── test/              # Test setup and test files
-├── src-tauri/             # Tauri/Rust backend
+├── app/                    # Desktop app (frontend + Tauri)
+│   ├── src/               # Frontend source code
+│   │   ├── app/           # App composition (mounting, router, providers, shell)
+│   │   ├── assets/        # Static assets (icons, logos)
+│   │   ├── api/           # Tauri command wrappers (typed service functions)
+│   │   ├── components/    # Shared React components (ui primitives, toaster, error boundary)
+│   │   │   └── ui/       # shadcn/ui components
+│   │   ├── features/      # Feature modules
+│   │   │   ├── about/     # About page / child window
+│   │   │   ├── command-palette/# Ctrl+K command palette
+│   │   │   ├── home/      # Main dashboard, desktop shell switching
+│   │   │   ├── profile/   # Mobile profile page and entry points for settings/about
+│   │   │   ├── settings/  # Settings page / child window (theme, language, window behavior, shortcuts)
+│   │   │   ├── tasks/     # Background task demo / notes demo
+│   │   │   └── updater/   # Update detection and install UX
+│   │   ├── hooks/         # Shared custom hooks
+│   │   ├── i18n/          # Internationalization
+│   │   │   └── locales/   # Translation files (en, zh)
+│   │   ├── lib/           # Utility functions and constants
+│   │   ├── platform/      # Runtime / Tauri / desktop-window platform helpers
+│   │   ├── providers/     # Cross-cutting context adapters (theme, query persistence)
+│   │   ├── routes/        # TanStack Router route definitions + route metadata registry
+│   │   ├── stores/        # Zustand stores
+│   │   └── test/          # Test setup and test files
+│   ├── src-tauri/         # Tauri/Rust backend
+│   │   ├── src/
+│   │   │   ├── main.rs    # Entry point
+│   │   │   ├── lib.rs     # App setup, plugin init, command registration
+│   │   │   ├── app.rs + app/              # App bootstrap, config, shared state
+│   │   │   ├── commands.rs + commands/  # Tauri commands (greet, task, notification, config, tray, notes)
+│   │   │   ├── config.rs                # Legacy config exports
+│   │   │   ├── error.rs + error/        # Custom error types (thiserror, serde)
+│   │   │   ├── logging.rs + logging/    # Tracing subscriber with EnvFilter
+│   │   │   ├── models.rs + models/      # Serde structs (task progress, etc.)
+│   │   │   ├── platform.rs + platform/  # Desktop platform integrations (tray, window rules)
+│   │   │   ├── plugins.rs + plugins/    # Plugin wrappers
+│   │   │   ├── response.rs              # API response helpers
+│   │   │   ├── services.rs + services/  # Service layer
+│   │   │   └── state.rs                 # Legacy state exports
+│   │   ├── capabilities/   # Tauri permission capabilities
+│   │   └── tauri.conf.json # Tauri configuration
+│   ├── scripts/            # Build & release scripts
+│   ├── build.ps1           # Multi-platform build script (Windows, Android, clean)
+│   ├── components.json     # shadcn/ui configuration
+│   ├── package.json
+│   ├── vite.config.ts
+│   ├── vitest.config.ts
+│   └── tsconfig.json
+├── server/                 # REST API server
 │   ├── src/
-│   │   ├── main.rs        # Entry point
-│   │   ├── lib.rs         # App setup, plugin init, command registration
-│   │   ├── app.rs + app/              # App bootstrap, config, shared state
-│   │   ├── commands.rs + commands/  # Tauri commands (greet, task, notification, config, tray)
-│   │   ├── config.rs                # Legacy config exports
-│   │   ├── error.rs + error/        # Custom error types (thiserror, serde)
-│   │   ├── logging.rs + logging/    # Tracing subscriber with EnvFilter
-│   │   ├── models.rs + models/      # Serde structs (task progress, etc.)
-│   │   ├── platform.rs + platform/  # Desktop platform integrations (tray, window rules)
-│   │   ├── plugins.rs + plugins/    # Plugin wrappers
-│   │   ├── response.rs              # API response helpers
-│   │   ├── services.rs + services/  # Service layer
-│   │   └── state.rs                 # Legacy state exports
-│   ├── crates/             # Shared Cargo workspace crates
-│   ├── capabilities/      # Tauri permission capabilities
-│   └── tauri.conf.json    # Tauri configuration
-├── scripts/               # Build & release scripts
-│   ├── changelog.mjs      # Generate CHANGELOG from git log
-│   ├── generate-feature.mjs  # Scaffold a new feature module
-│   └── release-version.mjs  # Version bump, changelog, commit, tag, push
-├── build.ps1              # Multi-platform build script (Windows, Android, clean)
-├── docs/                  # Documentation
-│   ├── AUTO_UPDATE.md     # Auto update guide
-│   ├── I18N.md            # Internationalization guide
-│   └── GLOBAL_SHORTCUT.md # Global shortcut guide
-├── components.json        # shadcn/ui configuration
-└── package.json
+│   │   ├── main.rs         # Entry point (axum)
+│   │   ├── lib.rs          # Module exports
+│   │   ├── config.rs       # App configuration from env
+│   │   ├── db.rs           # Database connection
+│   │   ├── error.rs        # Structured error types
+│   │   └── routes/         # API route handlers
+│   ├── tests/              # Integration tests
+│   ├── .env.example
+│   └── Cargo.toml
+├── types/                  # Shared Rust domain models
+│   ├── src/
+│   └── Cargo.toml
+├── entity/                 # Sea-ORM entities
+│   ├── src/
+│   └── Cargo.toml
+├── migration/              # Database migrations
+│   ├── src/
+│   └── Cargo.toml
+├── docs/                   # Documentation
+│   ├── AUTO_UPDATE.md      # Auto update guide
+│   ├── I18N.md             # Internationalization guide
+│   └── GLOBAL_SHORTCUT.md  # Global shortcut guide
+├── .github/
+│   └── workflows/          # CI/CD pipelines
+├── docker-compose.yml      # PostgreSQL + dev container
+├── Cargo.toml              # Cargo workspace configuration
+├── package.json            # Workspace root
+├── pnpm-workspace.yaml
+└── README.md
 ```
 
 ## Architecture Rules
 
-- Route semantics and window metadata live in `src/routes/registry/`
-- Router composition lives in `src/app/router.tsx` and `src/routes/builders/`
-- Shell UI lives in `src/app/shell/`
-- Platform/runtime code lives in `src/platform/`
+- Route semantics and window metadata live in `app/src/routes/registry/`
+- Router composition lives in `app/src/app/router.tsx` and `app/src/routes/builders/`
+- Shell UI lives in `app/src/app/shell/`
+- Platform/runtime code lives in `app/src/platform/`
 - Rust module roots use `app.rs`, `platform.rs`, and `services.rs`, not `mod.rs`
+- Shared Rust types live in `types/` crate, consumed by both `app/src-tauri` and `server`
+- Database entities live in `entity/` crate, migrations in `migration/` crate
 
 ## Query Persistence
 
 - Stable read-only queries can opt into official TanStack persistence by setting `meta.persist = true`
-- Persistence is wired through `src/app/providers/query-persistence.ts` with `PersistQueryClientProvider`
+- Persistence is wired through `app/src/app/providers/query-persistence.ts` with `PersistQueryClientProvider`
 - Only opted-in queries are dehydrated and restored
 - The persisted cache buster follows the app version via `VITE_APP_VERSION`, so a new release invalidates incompatible cached query data automatically
 
