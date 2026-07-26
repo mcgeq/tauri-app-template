@@ -37,14 +37,18 @@ src/auto-imports.d.ts
 
 # Rust build artifacts
 app/src-tauri/target/
+src-tauri/target/
+target/
 
 # Generated Android project files
 app/src-tauri/gen/android/
 app/src-tauri/gen/schemas/
+src-tauri/gen/android/
 src-tauri/gen/schemas/
 
 # Android signing
 app/src-tauri/gen/android/app/tauri-release.keystore
+src-tauri/gen/android/app/tauri-release.keystore
 
 # Server
 server/target/
@@ -56,3 +60,4 @@ target/
 
 # Windows reserved device names
 nul
+**/nul
