@@ -42,7 +42,7 @@ export function ProfilePage() {
             </div>
             <div>
               <h1 className="text-xl font-semibold tracking-tight">{t('profile.appName')}</h1>
-              <p className="text-muted-foreground mt-0.5 text-sm">{t('profile.version', { num: '0.0.1' })}</p>
+              <p className="text-muted-foreground mt-0.5 text-sm">{t('profile.version', { num: import.meta.env.VITE_APP_VERSION ?? '0.0.1' })}</p>
             </div>
           </div>
           <button

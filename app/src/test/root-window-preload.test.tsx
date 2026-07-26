@@ -56,6 +56,17 @@ vi.mock('@/platform/windows/window-navigation-bridge', () => ({
 vi.mock('@/platform/runtime/platform', () => ({
   IS_DESKTOP: true,
   IS_TAURI_APP: true,
+  SUPPORTS_TAURI_CALLBACKS: true,
+  IS_MOBILE_DEVICE: false,
+  PLATFORM_INFO: {
+    isDesktop: true,
+    isMobile: false,
+    isTauri: true,
+    osPlatform: 'windows' as const,
+    supportsMultiWindow: true,
+    supportsIpc: true,
+    supportsTauriCallbacks: true,
+  },
 }));
 
 vi.mock('@/i18n', () => ({}));

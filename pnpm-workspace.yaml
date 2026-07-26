@@ -1,6 +1,6 @@
+shellEmulator: true
 packages:
   - 'app'
-
 allowBuilds:
   esbuild: true
   simple-git-hooks: true

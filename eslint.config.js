@@ -29,6 +29,11 @@ export default await antfu({
     'tsconfig.node.json',
   ],
 }, {
+  files: ['pnpm-workspace.yaml'],
+  rules: {
+    'pnpm/yaml-enforce-settings': 'off',
+  },
+}, {
   rules: {
     'no-console': 'off',
     'no-debugger': 'warn',
