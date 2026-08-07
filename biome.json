@@ -1,0 +1,67 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "defaultBranch": "main"
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!**/dist/**",
+      "!**/coverage/**",
+      "!**/node_modules/**",
+      "!**/app/**",
+      "!**/src-tauri/**",
+      "!**/docs/**",
+      "!**/scripts/**",
+      "!**/src/auto-imports.d.ts",
+      "!**/tsconfig.json",
+      "!**/tsconfig.node.json",
+      "!**/*.md"
+    ],
+    "ignoreUnknown": true
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 120,
+    "lineEnding": "lf"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "semicolons": "always",
+      "trailingCommas": "all"
+    }
+  },
+  "css": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  },
+  "html": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "assist": {
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "suspicious": {
+        "noDebugger": "warn"
+      }
+    }
+  }
+}
