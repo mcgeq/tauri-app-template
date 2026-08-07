@@ -36,7 +36,7 @@ export function useGlobalShortcutSync() {
     void initShortcut();
 
     return () => {
-      unlistenShortcutChanged.then(fn => fn());
+      unlistenShortcutChanged.then((fn) => fn());
     };
   }, []);
 }

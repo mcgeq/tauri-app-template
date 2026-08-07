@@ -21,9 +21,9 @@ export function useWindowMaximized() {
     });
 
     return () => {
-      unlisten.then(fn => fn());
+      unlisten.then((fn) => fn());
     };
-  }, [isTauri]);
+  }, []);
 
   return { isMaximized, isTauri };
 }

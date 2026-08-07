@@ -46,11 +46,14 @@ function RootLayout() {
             continue;
           }
           const { label: windowLabel } = windowConfig;
-          const webview = new WebviewWindow(windowLabel, buildWebviewWindowOptions({
-            ...windowConfig,
-            url: w.path,
-            title: '',
-          }));
+          const webview = new WebviewWindow(
+            windowLabel,
+            buildWebviewWindowOptions({
+              ...windowConfig,
+              url: w.path,
+              title: '',
+            }),
+          );
           webview.once('tauri://error', (e) => {
             console.error('Failed to pre-create window:', windowLabel, e);
           });
@@ -65,7 +68,7 @@ function RootLayout() {
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
         e.preventDefault();
-        setPaletteOpen(prev => !prev);
+        setPaletteOpen((prev) => !prev);
       }
     };
     document.addEventListener('keydown', handleKeyDown);
@@ -80,11 +83,7 @@ function RootLayout() {
           IS_DESKTOP && !isMaximized ? 'rounded-lg' : '',
         )}
       >
-        <div
-          className={cn(
-            'flex min-h-0 min-w-0 flex-1 flex-col',
-          )}
-        >
+        <div className={cn('flex min-h-0 min-w-0 flex-1 flex-col')}>
           <Suspense fallback={<Loading />}>
             <Outlet />
           </Suspense>
@@ -98,4 +97,5 @@ function RootLayout() {
     </AppProviders>
   );
 }
+
 export { RootLayout };

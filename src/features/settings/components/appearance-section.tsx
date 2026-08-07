@@ -14,14 +14,12 @@ export function AppearanceSection({ t }: AppearanceSectionProps) {
     <div className="space-y-4">
       <div>
         <h2 className="mb-1 text-lg font-semibold">{t('settings.appearance.title')}</h2>
-        <p className="text-muted-foreground text-sm">
-          {t('settings.appearance.description')}
-        </p>
+        <p className="text-muted-foreground text-sm">{t('settings.appearance.description')}</p>
       </div>
 
       <div className="space-y-0">
         <div className="flex items-center justify-between py-2.5">
-          <label className="text-sm font-medium">{t('settings.appearance.theme')}</label>
+          <span className="text-sm font-medium">{t('settings.appearance.theme')}</span>
           <div className="flex gap-2">
             <Button
               variant={theme === 'light' ? 'default' : 'outline'}
@@ -56,7 +54,7 @@ export function AppearanceSection({ t }: AppearanceSectionProps) {
         <div className="border-t" />
 
         <div className="flex items-center justify-between py-2.5">
-          <label className="text-sm font-medium">{t('settings.appearance.language')}</label>
+          <span className="text-sm font-medium">{t('settings.appearance.language')}</span>
           <LanguageToggle />
         </div>
       </div>

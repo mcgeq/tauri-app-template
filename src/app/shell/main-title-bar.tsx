@@ -33,9 +33,10 @@ export function MainTitleBar() {
     <TitleBar
       title={t('app.title')}
       windowMenu
-      rightActions={(
+      rightActions={
         <>
           <button
+            type="button"
             onClick={handleOpenSettings}
             className="title-bar-btn mr-1"
             aria-label={t('settings.button')}
@@ -45,6 +46,7 @@ export function MainTitleBar() {
           </button>
 
           <button
+            type="button"
             onClick={handleOpenAbout}
             className="title-bar-btn mr-1"
             aria-label={t('about.button')}
@@ -56,6 +58,7 @@ export function MainTitleBar() {
           <LanguageToggle />
 
           <button
+            type="button"
             onClick={handleToggleTheme}
             className="title-bar-btn mr-0.5"
             aria-label={t('theme.toggle')}
@@ -64,7 +67,7 @@ export function MainTitleBar() {
             {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
           </button>
         </>
-      )}
+      }
     />
   );
 }

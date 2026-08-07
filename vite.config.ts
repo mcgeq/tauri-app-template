@@ -6,9 +6,9 @@ import AutoImport from 'unplugin-auto-import/vite';
 import { defineConfig } from 'vite';
 
 const host = process.env.TAURI_DEV_HOST;
-const packageJson = JSON.parse(
-  readFileSync(new URL('./package.json', import.meta.url), 'utf8'),
-) as { version?: string };
+const packageJson = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 'utf8')) as {
+  version?: string;
+};
 const appVersion = packageJson.version ?? '0.0.0';
 
 // https://vite.dev/config/
@@ -23,13 +23,13 @@ export default defineConfig(async ({ mode }) => {
         include: [/\.[tj]sx?$/],
         exclude: [/node_modules/, /\.git/, /src-tauri/],
       }),
-      isAnalyze
-      && (await import('rollup-plugin-visualizer')).visualizer({
-        filename: 'dist/stats.html',
-        open: true,
-        gzipSize: true,
-        brotliSize: true,
-      }),
+      isAnalyze &&
+        (await import('rollup-plugin-visualizer')).visualizer({
+          filename: 'dist/stats.html',
+          open: true,
+          gzipSize: true,
+          brotliSize: true,
+        }),
     ].filter(Boolean),
 
     resolve: {
@@ -63,13 +63,27 @@ export default defineConfig(async ({ mode }) => {
       rollupOptions: {
         output: {
           manualChunks(id: string) {
-            if (id.includes('node_modules/react/') || id.includes('node_modules/react-dom/') || id.includes('node_modules/scheduler/'))
+            if (
+              id.includes('node_modules/react/') ||
+              id.includes('node_modules/react-dom/') ||
+              id.includes('node_modules/scheduler/')
+            )
               return 'vendor-react';
-            if (id.includes('node_modules/i18next') || id.includes('node_modules/zustand') || id.includes('node_modules/zod') || id.includes('node_modules/date-fns'))
+            if (
+              id.includes('node_modules/i18next') ||
+              id.includes('node_modules/zustand') ||
+              id.includes('node_modules/zod') ||
+              id.includes('node_modules/date-fns')
+            )
               return 'vendor-utils';
-            if (id.includes('node_modules/@tanstack/'))
-              return 'router';
-            if (id.includes('node_modules/sonner') || id.includes('node_modules/cmdk') || id.includes('node_modules/lucide-react') || id.includes('node_modules/motion') || id.includes('node_modules/next-themes'))
+            if (id.includes('node_modules/@tanstack/')) return 'router';
+            if (
+              id.includes('node_modules/sonner') ||
+              id.includes('node_modules/cmdk') ||
+              id.includes('node_modules/lucide-react') ||
+              id.includes('node_modules/motion') ||
+              id.includes('node_modules/next-themes')
+            )
               return 'ui';
           },
         },

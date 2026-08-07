@@ -1,8 +1,8 @@
-import type { AppRouteKey } from '@/routes/registry/route-types';
 import { IS_DESKTOP, IS_TAURI_APP } from '@/platform/runtime/platform';
 import { buildCreateWindowOptionsFromRouteWindow } from '@/platform/windows/webview-window-options';
 import { createWindow } from '@/platform/windows/window-manager';
 import { getRouteMeta, getRoutePath } from '@/routes/registry/route-registry';
+import type { AppRouteKey } from '@/routes/registry/route-types';
 
 interface OpenAppRouteOptions {
   navigate: (options: { to: string }) => Promise<unknown> | unknown;

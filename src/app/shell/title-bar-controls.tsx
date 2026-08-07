@@ -29,8 +29,7 @@ export function TitleBarControls({
     const appWindow = getCurrentWebviewWindow();
     if (windowMenu && minimizeAction === 'tray') {
       await appWindow.hide();
-    }
-    else {
+    } else {
       await appWindow.minimize();
     }
   };
@@ -51,17 +50,14 @@ export function TitleBarControls({
     if (windowMenu) {
       if (closeAction === 'quit') {
         await exit(0);
-      }
-      else {
+      } else {
         await appWindow.hide();
       }
-    }
-    else {
+    } else {
       const isMain = appWindow.label === 'main';
       if (isMain) {
         await appWindow.hide();
-      }
-      else {
+      } else {
         await closeWindow(appWindow.label);
       }
     }
@@ -104,7 +100,7 @@ export function TitleBarControls({
     });
 
     return () => {
-      unlistenCloseRequested.then(fn => fn());
+      unlistenCloseRequested.then((fn) => fn());
     };
   }, [isTauri, showClose]);
 
@@ -115,18 +111,14 @@ export function TitleBarControls({
   return (
     <>
       {showMinimize && (
-        <button
-          onClick={minimize}
-          className="title-bar-control"
-          aria-label="Minimize"
-          tabIndex={-1}
-        >
+        <button type="button" onClick={minimize} className="title-bar-control" aria-label="Minimize" tabIndex={-1}>
           <Minus className="h-4 w-4" />
         </button>
       )}
 
       {showMaximize && (
         <button
+          type="button"
           onClick={toggleMaximize}
           className="title-bar-control"
           aria-label={isMaximized ? 'Restore' : 'Maximize'}
@@ -138,6 +130,7 @@ export function TitleBarControls({
 
       {showClose && (
         <button
+          type="button"
           onClick={handleClose}
           className="title-bar-control hover:bg-destructive hover:text-destructive-foreground"
           aria-label="Close"

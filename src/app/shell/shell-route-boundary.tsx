@@ -9,6 +9,7 @@ export function ShellRouteBoundary({ children }: { children: ReactNode }) {
           <p className="text-destructive text-base font-semibold">Route failed to render</p>
           <p className="text-muted-foreground max-w-lg text-sm">{error.message}</p>
           <button
+            type="button"
             onClick={reset}
             className="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm"
           >

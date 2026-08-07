@@ -14,7 +14,9 @@ function TestApp() {
   return (
     <ErrorBoundary>
       <Bomb shouldThrow={shouldThrow} />
-      <button onClick={() => setShouldThrow(true)}>trigger</button>
+      <button type="button" onClick={() => setShouldThrow(true)}>
+        trigger
+      </button>
     </ErrorBoundary>
   );
 }
@@ -28,7 +30,11 @@ afterEach(() => {
 });
 
 it('renders children when no error', () => {
-  render(<ErrorBoundary><div>ok</div></ErrorBoundary>);
+  render(
+    <ErrorBoundary>
+      <div>ok</div>
+    </ErrorBoundary>,
+  );
   expect(screen.getByText('ok')).toBeInTheDocument();
 });
 

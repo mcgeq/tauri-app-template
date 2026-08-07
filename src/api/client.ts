@@ -27,25 +27,28 @@ export async function invokeCommand<T>(
 
   let timeoutId: ReturnType<typeof setTimeout> | undefined;
   const timeoutPromise = new Promise<never>((_, reject) => {
-    timeoutId = setTimeout(() => reject(new CommandError(
-      `Command "${command}" did not return within ${timeoutMs}ms and may still complete in the backend.`,
-      command,
-    )), timeoutMs);
+    timeoutId = setTimeout(
+      () =>
+        reject(
+          new CommandError(
+            `Command "${command}" did not return within ${timeoutMs}ms and may still complete in the backend.`,
+            command,
+          ),
+        ),
+      timeoutMs,
+    );
   });
 
   try {
     return await Promise.race([invokePromise, timeoutPromise]);
-  }
-  catch (error) {
-    if (error instanceof CommandError)
-      throw error;
+  } catch (error) {
+    if (error instanceof CommandError) throw error;
     throw new CommandError(
       `Command "${command}" failed: ${error instanceof Error ? error.message : String(error)}`,
       command,
       error,
     );
-  }
-  finally {
+  } finally {
     if (timeoutId) {
       clearTimeout(timeoutId);
     }

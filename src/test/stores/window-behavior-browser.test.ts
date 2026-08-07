@@ -9,10 +9,13 @@ vi.mock('@/platform/runtime/platform', () => ({
 describe('window behavior browser fallback', () => {
   beforeEach(() => {
     globalThis.localStorage.clear();
-    globalThis.localStorage.setItem('tauri-window-behavior', JSON.stringify({
-      minimizeAction: 'tray',
-      closeAction: 'quit',
-    }));
+    globalThis.localStorage.setItem(
+      'tauri-window-behavior',
+      JSON.stringify({
+        minimizeAction: 'tray',
+        closeAction: 'quit',
+      }),
+    );
 
     useWindowBehavior.setState({
       hydrated: false,
@@ -41,9 +44,11 @@ describe('window behavior browser fallback', () => {
       await result.current.setCloseAction('quit');
     });
 
-    expect(globalThis.localStorage.getItem('tauri-window-behavior')).toBe(JSON.stringify({
-      minimizeAction: 'tray',
-      closeAction: 'quit',
-    }));
+    expect(globalThis.localStorage.getItem('tauri-window-behavior')).toBe(
+      JSON.stringify({
+        minimizeAction: 'tray',
+        closeAction: 'quit',
+      }),
+    );
   });
 });

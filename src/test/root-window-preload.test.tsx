@@ -91,10 +91,7 @@ describe('root desktop window preloading', () => {
 
     await vi.runAllTimersAsync();
 
-    expect(rootPreloadTestState.createdWindows.map(window => window.label)).toEqual([
-      'settings',
-      'about',
-    ]);
+    expect(rootPreloadTestState.createdWindows.map((window) => window.label)).toEqual(['settings', 'about']);
     for (const window of rootPreloadTestState.createdWindows) {
       expect(window.options).not.toHaveProperty('parent');
       expect(window.options).not.toHaveProperty('closeStrategy');

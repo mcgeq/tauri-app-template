@@ -1,6 +1,6 @@
-import type { AppLanguage } from '@/i18n/resources';
 import { emitLanguageChanged, updateTrayMenu } from '@/api';
 import i18n from '@/i18n';
+import type { AppLanguage } from '@/i18n/resources';
 import { ensureLanguageResources, SUPPORTED_LANGUAGES } from '@/i18n/resources';
 import { IS_TAURI_APP, SUPPORTS_TAURI_CALLBACKS } from '@/platform/runtime/platform';
 
@@ -21,8 +21,7 @@ export async function setLanguage(language: AppLanguage): Promise<void> {
         settingsText: i18n.t('tray.settings', { lng: language }),
         quitText: i18n.t('tray.quit', { lng: language }),
       });
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Failed to update tray menu:', error);
     }
   }

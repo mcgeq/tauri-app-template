@@ -49,34 +49,49 @@ export default function SettingsPage() {
     }
   }, [handleShowMainWindow]);
 
-  const menuItems = useMemo(() => [
-    { id: 'appearance' as SettingSection, label: t('settings.appearance.title'), icon: Palette },
-    ...(IS_DESKTOP
-      ? [
-          { id: 'window' as SettingSection, label: t('settings.window.title'), icon: SquareArrowOutUpRight },
-          { id: 'shortcut' as SettingSection, label: t('settings.shortcut.title'), icon: Keyboard },
-        ]
-      : []),
-  ], [t]);
+  const menuItems = useMemo(
+    () => [
+      { id: 'appearance' as SettingSection, label: t('settings.appearance.title'), icon: Palette },
+      ...(IS_DESKTOP
+        ? [
+            { id: 'window' as SettingSection, label: t('settings.window.title'), icon: SquareArrowOutUpRight },
+            { id: 'shortcut' as SettingSection, label: t('settings.shortcut.title'), icon: Keyboard },
+          ]
+        : []),
+    ],
+    [t],
+  );
 
-  const settingsContent = useMemo(() => (
-    <div className={cn('max-w-3xl p-4', !IS_DESKTOP && 'mx-auto w-full')}>
-      {activeSection === 'appearance' && <AppearanceSection t={t} />}
-      {IS_DESKTOP && activeSection === 'window' && (
-        <WindowBehaviorSection
-          hydrated={windowBehaviorHydrated}
-          minimizeAction={minimizeAction}
-          closeAction={closeAction}
-          setMinimizeAction={setMinimizeAction}
-          setCloseAction={setCloseAction}
-          t={t}
-        />
-      )}
-      {IS_DESKTOP && activeSection === 'shortcut' && (
-        <ShortcutSection shortcut={shortcut} onShortcutChange={setShortcut} t={t} />
-      )}
-    </div>
-  ), [t, activeSection, windowBehaviorHydrated, minimizeAction, closeAction, setMinimizeAction, setCloseAction, shortcut, setShortcut]);
+  const settingsContent = useMemo(
+    () => (
+      <div className={cn('max-w-3xl p-4', !IS_DESKTOP && 'mx-auto w-full')}>
+        {activeSection === 'appearance' && <AppearanceSection t={t} />}
+        {IS_DESKTOP && activeSection === 'window' && (
+          <WindowBehaviorSection
+            hydrated={windowBehaviorHydrated}
+            minimizeAction={minimizeAction}
+            closeAction={closeAction}
+            setMinimizeAction={setMinimizeAction}
+            setCloseAction={setCloseAction}
+            t={t}
+          />
+        )}
+        {IS_DESKTOP && activeSection === 'shortcut' && (
+          <ShortcutSection shortcut={shortcut} onShortcutChange={setShortcut} t={t} />
+        )}
+      </div>
+    ),
+    [
+      t,
+      activeSection,
+      windowBehaviorHydrated,
+      minimizeAction,
+      closeAction,
+      setMinimizeAction,
+      setCloseAction,
+      shortcut,
+    ],
+  );
 
   return (
     <WindowFrame
@@ -90,6 +105,7 @@ export default function SettingsPage() {
               const Icon = item.icon;
               return (
                 <button
+                  type="button"
                   key={item.id}
                   onClick={() => setActiveSection(item.id)}
                   className={cn(
@@ -108,17 +124,19 @@ export default function SettingsPage() {
         </aside>
       )}
 
-      {IS_DESKTOP
-        ? <div className="flex-1 overflow-auto">{settingsContent}</div>
-        : (
-            <MobileSubpageShell
-              title={t('settings.title')}
-              onBack={() => { void navigate({ to: '/profile' }); }}
-              className="flex-1 overflow-auto"
-            >
-              {settingsContent}
-            </MobileSubpageShell>
-          )}
+      {IS_DESKTOP ? (
+        <div className="flex-1 overflow-auto">{settingsContent}</div>
+      ) : (
+        <MobileSubpageShell
+          title={t('settings.title')}
+          onBack={() => {
+            void navigate({ to: '/profile' });
+          }}
+          className="flex-1 overflow-auto"
+        >
+          {settingsContent}
+        </MobileSubpageShell>
+      )}
     </WindowFrame>
   );
 }

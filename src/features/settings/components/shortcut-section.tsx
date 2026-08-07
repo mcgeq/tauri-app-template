@@ -27,8 +27,7 @@ export function ShortcutSection({ shortcut, onShortcutChange, t }: ShortcutSecti
       await registerShortcut(newShortcut, () => toggleWindow('main'), oldShortcut);
       await emitShortcutChanged(newShortcut);
       toast.success(t('settings.shortcut.setSuccess', { shortcut: newShortcut }));
-    }
-    else {
+    } else {
       localStorage.removeItem(SHORTCUT_KEY);
       if (oldShortcut) {
         await unregisterShortcut(oldShortcut);
@@ -42,18 +41,14 @@ export function ShortcutSection({ shortcut, onShortcutChange, t }: ShortcutSecti
     <div className="space-y-4">
       <div>
         <h2 className="mb-1 text-lg font-semibold">{t('settings.shortcut.title')}</h2>
-        <p className="text-muted-foreground text-sm">
-          {t('settings.shortcut.description')}
-        </p>
+        <p className="text-muted-foreground text-sm">{t('settings.shortcut.description')}</p>
       </div>
 
       <div className="space-y-0">
         <div className="flex items-center justify-between py-2.5">
           <div className="flex-1">
-            <label className="text-sm font-medium">{t('settings.shortcut.showMain')}</label>
-            <p className="text-muted-foreground mt-0.5 text-xs">
-              {t('settings.shortcut.showMainDesc')}
-            </p>
+            <span className="text-sm font-medium">{t('settings.shortcut.showMain')}</span>
+            <p className="text-muted-foreground mt-0.5 text-xs">{t('settings.shortcut.showMainDesc')}</p>
           </div>
           <ShortcutInput value={shortcut} onChange={handleShortcutChange} />
         </div>

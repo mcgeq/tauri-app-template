@@ -32,6 +32,7 @@ export function ShortcutInput({ value, onChange }: ShortcutInputProps) {
   };
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: composite control capturing shortcuts; nested clear button makes a real <button> invalid HTML
     <div
       className={cn(
         'border-input bg-background flex h-9 w-40 cursor-pointer items-center justify-between rounded-md border px-2 text-sm select-none',
@@ -39,11 +40,13 @@ export function ShortcutInput({ value, onChange }: ShortcutInputProps) {
         !value && 'text-muted-foreground justify-center',
       )}
       tabIndex={0}
+      role="button"
       onKeyDown={handleKeydown}
     >
       <span className="flex-1 text-center">{value || t('settings.shortcut.placeholder')}</span>
       {value && (
         <button
+          type="button"
           onClick={handleClear}
           className="text-muted-foreground hover:text-foreground ml-1 flex-shrink-0"
           tabIndex={-1}

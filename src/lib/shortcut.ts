@@ -1,9 +1,4 @@
-import {
-  isRegistered,
-  register,
-  unregister,
-  unregisterAll,
-} from '@tauri-apps/plugin-global-shortcut';
+import { isRegistered, register, unregister, unregisterAll } from '@tauri-apps/plugin-global-shortcut';
 
 export function convertToShortcut(event: KeyboardEvent): string {
   const keys: string[] = [];
@@ -11,8 +6,7 @@ export function convertToShortcut(event: KeyboardEvent): string {
   // Check if modifier keys are pressed
   if (event.ctrlKey) {
     keys.push('Ctrl');
-  }
-  else if (event.metaKey) {
+  } else if (event.metaKey) {
     keys.push('Cmd');
   }
   if (event.altKey) {
@@ -38,19 +32,18 @@ export function convertToShortcut(event: KeyboardEvent): string {
   // Convert special key names to standard format
   const keyMap: Record<string, string> = {
     ' ': 'Space',
-    'ArrowUp': 'Up',
-    'ArrowDown': 'Down',
-    'ArrowLeft': 'Left',
-    'ArrowRight': 'Right',
-    'Escape': 'Esc',
-    'Enter': 'Enter',
+    ArrowUp: 'Up',
+    ArrowDown: 'Down',
+    ArrowLeft: 'Left',
+    ArrowRight: 'Right',
+    Escape: 'Esc',
+    Enter: 'Enter',
   };
 
   // Use mapped value if key exists in keyMap
   if (keyMap[mainKey]) {
     mainKey = keyMap[mainKey];
-  }
-  else if (mainKey.length === 1) {
+  } else if (mainKey.length === 1) {
     // Ensure single character keys are uppercase
     mainKey = mainKey.toUpperCase();
   }
@@ -64,11 +57,7 @@ export function convertToShortcut(event: KeyboardEvent): string {
   return shortcut;
 }
 
-export async function registerShortcut(
-  shortcut: string,
-  callback: () => void,
-  oldShortcut?: string,
-): Promise<void> {
+export async function registerShortcut(shortcut: string, callback: () => void, oldShortcut?: string): Promise<void> {
   if (oldShortcut) {
     await unregisterShortcut(oldShortcut);
   }
@@ -79,8 +68,7 @@ export async function registerShortcut(
         callback();
       }
     });
-  }
-  catch (e) {
+  } catch (e) {
     console.error('Failed to register shortcut:', e);
   }
 }
@@ -94,8 +82,7 @@ export async function unregisterShortcut(shortcut?: string): Promise<void> {
       return;
     }
     await unregister(shortcut);
-  }
-  catch (e) {
+  } catch (e) {
     console.error('Failed to unregister shortcut:', e);
   }
 }

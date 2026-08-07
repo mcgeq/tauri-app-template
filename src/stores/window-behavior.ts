@@ -1,10 +1,7 @@
-import type { WindowBehaviorConfig } from '@/api/commands/window-behavior';
 import { useEffect } from 'react';
 import { create } from 'zustand';
-import {
-  createWindowBehaviorRepository,
-  DEFAULT_WINDOW_BEHAVIOR_CONFIG,
-} from '@/stores/window-behavior-repository';
+import type { WindowBehaviorConfig } from '@/api/commands/window-behavior';
+import { createWindowBehaviorRepository, DEFAULT_WINDOW_BEHAVIOR_CONFIG } from '@/stores/window-behavior-repository';
 
 export type MinimizeAction = 'taskbar' | 'tray';
 export type CloseAction = 'quit' | 'tray';
@@ -37,8 +34,7 @@ export const useWindowBehavior = create<WindowBehaviorState>()((set, get) => ({
 
     try {
       await repository.save(next);
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Failed to persist window behavior config:', error);
       set(previous);
       return;
@@ -54,8 +50,7 @@ export const useWindowBehavior = create<WindowBehaviorState>()((set, get) => ({
 
     try {
       await repository.save(next);
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Failed to persist window behavior config:', error);
       set(previous);
       return;
@@ -69,7 +64,8 @@ export function useWindowBehaviorSync() {
   useEffect(() => {
     let cancelled = false;
 
-    void repository.load()
+    void repository
+      .load()
       .then((config) => {
         if (!cancelled) {
           useWindowBehavior.setState({
@@ -94,7 +90,7 @@ export function useWindowBehaviorSync() {
 
     return () => {
       cancelled = true;
-      unsubscribe.then(fn => fn());
+      unsubscribe.then((fn) => fn());
     };
   }, []);
 }

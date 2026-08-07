@@ -11,12 +11,7 @@ interface TitleBarShellProps {
   onDoubleClick?: () => void;
 }
 
-export function TitleBarShell({
-  title,
-  leftActions,
-  rightActions,
-  onDoubleClick,
-}: TitleBarShellProps) {
+export function TitleBarShell({ title, leftActions, rightActions, onDoubleClick }: TitleBarShellProps) {
   const { isMaximized } = useWindowMaximized();
   const isMobile = useCompactLayout();
   const isTauri = IS_TAURI_APP;
@@ -32,18 +27,13 @@ export function TitleBarShell({
         !isMaximized ? 'rounded-t-lg' : '',
       )}
     >
-      <div
-        data-tauri-drag-region
-        onDoubleClick={onDoubleClick}
-        className="flex grow items-center gap-2 pl-2"
-      >
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: Tauri window drag region, not a keyboard-interactive control */}
+      <div data-tauri-drag-region onDoubleClick={onDoubleClick} className="flex grow items-center gap-2 pl-2">
         {title && <span className="text-sm font-medium text-slate-400">{title}</span>}
         {leftActions}
       </div>
 
-      <div className="flex items-center gap-1">
-        {rightActions}
-      </div>
+      <div className="flex items-center gap-1">{rightActions}</div>
     </div>
   );
 }

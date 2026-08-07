@@ -22,14 +22,12 @@ export function WindowBehaviorSection({
     <div className="space-y-4">
       <div>
         <h2 className="mb-1 text-lg font-semibold">{t('settings.window.title')}</h2>
-        <p className="text-muted-foreground text-sm">
-          {t('settings.window.description')}
-        </p>
+        <p className="text-muted-foreground text-sm">{t('settings.window.description')}</p>
       </div>
 
       <div className="space-y-0">
         <div className="flex items-center justify-between py-2.5">
-          <label className="text-sm font-medium">{t('settings.window.minimizeAction')}</label>
+          <span className="text-sm font-medium">{t('settings.window.minimizeAction')}</span>
           <div className="flex gap-2">
             <Button
               variant={minimizeAction === 'taskbar' ? 'default' : 'outline'}
@@ -57,7 +55,7 @@ export function WindowBehaviorSection({
         <div className="border-t" />
 
         <div className="flex items-center justify-between py-2.5">
-          <label className="text-sm font-medium">{t('settings.window.closeAction')}</label>
+          <span className="text-sm font-medium">{t('settings.window.closeAction')}</span>
           <div className="flex gap-2">
             <Button
               variant={closeAction === 'quit' ? 'default' : 'outline'}

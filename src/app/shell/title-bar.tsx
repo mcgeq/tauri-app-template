@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
+import type { ReactNode } from 'react';
 import { TitleBarControls } from '@/app/shell/title-bar-controls';
 import { TitleBarShell } from '@/app/shell/title-bar-shell';
 
@@ -24,15 +24,19 @@ export function TitleBar({
   rightActions,
   onDoubleClick,
 }: TitleBarProps) {
-  const handleDoubleClick = onDoubleClick ?? (showMaximize
-    ? () => { getCurrentWebviewWindow().toggleMaximize(); }
-    : undefined);
+  const handleDoubleClick =
+    onDoubleClick ??
+    (showMaximize
+      ? () => {
+          getCurrentWebviewWindow().toggleMaximize();
+        }
+      : undefined);
 
   return (
     <TitleBarShell
       title={title}
       leftActions={leftActions}
-      rightActions={(
+      rightActions={
         <>
           {rightActions}
           {rightActions && (showMinimize || showMaximize || showClose) && (
@@ -45,7 +49,7 @@ export function TitleBar({
             windowMenu={windowMenu}
           />
         </>
-      )}
+      }
       onDoubleClick={handleDoubleClick}
     />
   );

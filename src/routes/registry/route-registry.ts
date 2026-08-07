@@ -120,7 +120,7 @@ export function getRouteMeta(key: AppRouteKey) {
 }
 
 export function getRouteMetaByPath(pathname: string) {
-  return APP_ROUTE_LIST.find(route => route.path === pathname);
+  return APP_ROUTE_LIST.find((route) => route.path === pathname);
 }
 
 export function getRoutePath(key: AppRouteKey) {
@@ -133,23 +133,20 @@ export function getBackRoutePath(key: AppRouteKey) {
 }
 
 export function getNavRoutes(platform: AppPlatform) {
-  return APP_ROUTE_LIST
-    .filter(route => route.shell === 'app' && route.platform[platform].mode === 'page')
+  return APP_ROUTE_LIST.filter((route) => route.shell === 'app' && route.platform[platform].mode === 'page')
     .filter(hasNav)
     .sort((a, b) => a.nav.order - b.nav.order);
 }
 
 export function getPreloadableDesktopWindows() {
-  return APP_ROUTE_LIST.filter(route =>
-    route.platform.desktop.mode === 'window'
-    && route.platform.desktop.window?.preload,
+  return APP_ROUTE_LIST.filter(
+    (route) => route.platform.desktop.mode === 'window' && route.platform.desktop.window?.preload,
   );
 }
 
 export function getDesktopWindowCloseConfig(label: string): RouteWindowCloseConfig {
-  const windowMeta = APP_ROUTE_LIST.find(route =>
-    route.platform.desktop.mode === 'window'
-    && route.platform.desktop.window?.label === label,
+  const windowMeta = APP_ROUTE_LIST.find(
+    (route) => route.platform.desktop.mode === 'window' && route.platform.desktop.window?.label === label,
   )?.platform.desktop.window;
 
   if (!windowMeta?.closeStrategy || windowMeta.closeStrategy === 'hide') {

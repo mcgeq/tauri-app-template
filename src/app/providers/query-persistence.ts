@@ -1,5 +1,5 @@
-import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-client';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-client';
 
 type StorageLike = Pick<Storage, 'getItem' | 'setItem' | 'removeItem'>;
 
@@ -33,16 +33,14 @@ export function createQueryPersister(storage: StorageLike | null | undefined) {
 }
 
 export function createQueryPersistenceOptions(
-  storage: StorageLike | null | undefined = typeof window === 'undefined'
-    ? undefined
-    : window.localStorage,
+  storage: StorageLike | null | undefined = typeof window === 'undefined' ? undefined : window.localStorage,
 ): Omit<PersistQueryClientOptions, 'queryClient'> {
   return {
     persister: createQueryPersister(storage),
     maxAge: QUERY_CACHE_MAX_AGE,
     buster: QUERY_CACHE_BUSTER,
     dehydrateOptions: {
-      shouldDehydrateQuery: query => query.meta?.persist === true,
+      shouldDehydrateQuery: (query) => query.meta?.persist === true,
     },
   };
 }

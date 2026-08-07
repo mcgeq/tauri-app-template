@@ -75,10 +75,12 @@ describe('title bar desktop close behavior', () => {
     titleBarTestState.unlistenResizeMock.mockReset();
     titleBarTestState.unlistenCloseRequestedMock.mockReset();
     titleBarTestState.onResizedMock.mockReset().mockResolvedValue(titleBarTestState.unlistenResizeMock);
-    titleBarTestState.onCloseRequestedMock.mockReset().mockImplementation((handler: typeof titleBarTestState.closeRequestedHandler) => {
-      titleBarTestState.closeRequestedHandler = handler ?? undefined;
-      return Promise.resolve(titleBarTestState.unlistenCloseRequestedMock);
-    });
+    titleBarTestState.onCloseRequestedMock
+      .mockReset()
+      .mockImplementation((handler: typeof titleBarTestState.closeRequestedHandler) => {
+        titleBarTestState.closeRequestedHandler = handler ?? undefined;
+        return Promise.resolve(titleBarTestState.unlistenCloseRequestedMock);
+      });
     delete (window as Window & { __TAURI__?: unknown }).__TAURI__;
   });
 

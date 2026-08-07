@@ -42,10 +42,13 @@ export function ProfilePage() {
             </div>
             <div>
               <h1 className="text-xl font-semibold tracking-tight">{t('profile.appName')}</h1>
-              <p className="text-muted-foreground mt-0.5 text-sm">{t('profile.version', { num: import.meta.env.VITE_APP_VERSION ?? '0.0.1' })}</p>
+              <p className="text-muted-foreground mt-0.5 text-sm">
+                {t('profile.version', { num: import.meta.env.VITE_APP_VERSION ?? '0.0.1' })}
+              </p>
             </div>
           </div>
           <button
+            type="button"
             onClick={handleSettings}
             className="bg-primary/10 hover:bg-primary/20 ring-primary/20 flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium ring-1 transition-all hover:scale-105 active:scale-95"
             aria-label={t('profile.settings')}
@@ -58,11 +61,8 @@ export function ProfilePage() {
 
       {/* Tech stack */}
       <div className="grid grid-cols-2 gap-3 px-6 py-4">
-        {techStack.map(item => (
-          <div
-            key={item.labelKey}
-            className="bg-muted/50 hover:bg-muted/80 rounded-xl border p-4 transition-colors"
-          >
+        {techStack.map((item) => (
+          <div key={item.labelKey} className="bg-muted/50 hover:bg-muted/80 rounded-xl border p-4 transition-colors">
             <p className="text-sm font-medium">{t(item.labelKey)}</p>
             <p className="text-muted-foreground mt-0.5 text-xs">{t(item.descKey)}</p>
           </div>
@@ -75,6 +75,7 @@ export function ProfilePage() {
       {/* Footer */}
       <div className="border-t px-6 py-4">
         <button
+          type="button"
           onClick={handleAbout}
           className="text-muted-foreground hover:text-foreground flex w-full items-center justify-center gap-2 py-2 text-sm transition-colors"
         >

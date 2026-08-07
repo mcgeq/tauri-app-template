@@ -1,7 +1,7 @@
-import type { TaskProgressPayload } from '@/api';
 import { Play, Square } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { TaskProgressPayload } from '@/api';
 import { onTaskComplete, onTaskProgress, startBackgroundTask } from '@/api';
 import { Button } from '@/components/ui/button';
 import { SUPPORTS_TAURI_CALLBACKS } from '@/platform/runtime/platform';
@@ -20,8 +20,7 @@ export function TaskDemo() {
 
     try {
       await startBackgroundTask();
-    }
-    catch {
+    } catch {
       setRunning(false);
     }
   }, []);
@@ -48,7 +47,9 @@ export function TaskDemo() {
     setup();
 
     return () => {
-      unlistenRef.current.forEach(fn => fn());
+      unlistenRef.current.forEach((fn) => {
+        fn();
+      });
       unlistenRef.current = [];
     };
   }, []);

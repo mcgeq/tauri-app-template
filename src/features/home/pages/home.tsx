@@ -36,12 +36,8 @@ export default function HomePage() {
     <div className="flex min-h-0 w-full flex-1 flex-col justify-start overflow-y-auto overflow-x-hidden px-5 py-6 sm:p-8">
       <div className="flex min-h-full w-full flex-col items-center justify-center gap-6 text-center sm:gap-8">
         <div className="flex w-full max-w-xl flex-col items-center gap-3">
-          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">
-            {t('app.welcome')}
-          </h1>
-          <p className="text-muted-foreground max-w-md text-sm leading-6 sm:text-base">
-            {t('app.description')}
-          </p>
+          <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">{t('app.welcome')}</h1>
+          <p className="text-muted-foreground max-w-md text-sm leading-6 sm:text-base">{t('app.description')}</p>
         </div>
 
         <div className="flex w-full max-w-sm flex-nowrap items-center justify-center gap-3 sm:max-w-none sm:gap-8">
@@ -86,16 +82,13 @@ export default function HomePage() {
                   value={name}
                   onChange={(e) => {
                     setName(e.currentTarget.value);
-                    if (error)
-                      setError(null);
+                    if (error) setError(null);
                   }}
                   placeholder={t('greet.placeholder')}
                   className={error ? 'border-destructive' : ''}
                   aria-invalid={!!error}
                 />
-                {error && (
-                  <p className="text-destructive absolute -bottom-5 text-xs">{error}</p>
-                )}
+                {error && <p className="text-destructive absolute -bottom-5 text-xs">{error}</p>}
               </div>
               <Button type="submit" disabled={isPending} className="h-9 shrink-0 px-3">
                 {t('greet.button')}

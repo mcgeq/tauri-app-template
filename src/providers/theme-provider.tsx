@@ -3,13 +3,7 @@ import { ThemeProvider as NextThemesProvider, useTheme as useNextTheme } from 'n
 
 export function ThemeProvider({ children, ...props }: ThemeProviderProps) {
   return (
-    <NextThemesProvider
-      attribute="class"
-      defaultTheme="system"
-      storageKey="tauri-ui-theme"
-      enableSystem
-      {...props}
-    >
+    <NextThemesProvider attribute="class" defaultTheme="system" storageKey="tauri-ui-theme" enableSystem {...props}>
       {children}
     </NextThemesProvider>
   );

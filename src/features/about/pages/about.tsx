@@ -32,20 +32,12 @@ export default function AboutPage() {
 
   const aboutContent = (
     <div className="flex flex-col items-center gap-5 px-8 py-6 text-center">
-      <img
-        src={appIcon}
-        alt="App icon"
-        className="h-16 w-16 rounded-xl"
-      />
+      <img src={appIcon} alt="App icon" className="h-16 w-16 rounded-xl" />
 
       <div className="space-y-1">
         <h2 className="text-lg font-bold">{t('about.appName')}</h2>
-        <p className="text-muted-foreground text-xs">
-          {t('about.version', { num: appVersion })}
-        </p>
-        <p className="text-muted-foreground/60 text-xs">
-          {t('about.copyright')}
-        </p>
+        <p className="text-muted-foreground text-xs">{t('about.version', { num: appVersion })}</p>
+        <p className="text-muted-foreground/60 text-xs">{t('about.copyright')}</p>
       </div>
 
       <div className="w-full space-y-2">
@@ -62,9 +54,7 @@ export default function AboutPage() {
         )}
       </div>
 
-      {showNoUpdate && (
-        <p className="text-muted-foreground text-xs">{t('updater.upToDate')}</p>
-      )}
+      {showNoUpdate && <p className="text-muted-foreground text-xs">{t('updater.upToDate')}</p>}
     </div>
   );
 
@@ -73,18 +63,18 @@ export default function AboutPage() {
       titleBar={<TitleBar title={t('about.title')} showMinimize={false} showMaximize={false} />}
       contentClassName="flex flex-1 items-center justify-center overflow-hidden"
     >
-      {IS_DESKTOP
-        ? aboutContent
-        : (
-            <MobileSubpageShell
-              onBack={() => {
-                void navigate({ to: '/profile' });
-              }}
-              className="w-full"
-            >
-              {aboutContent}
-            </MobileSubpageShell>
-          )}
+      {IS_DESKTOP ? (
+        aboutContent
+      ) : (
+        <MobileSubpageShell
+          onBack={() => {
+            void navigate({ to: '/profile' });
+          }}
+          className="w-full"
+        >
+          {aboutContent}
+        </MobileSubpageShell>
+      )}
     </WindowFrame>
   );
 }

@@ -60,10 +60,7 @@ describe('window frame mobile safe area handling', () => {
     const mod = await import('@/app/shell/window-frame');
 
     render(
-      <mod.WindowFrame
-        {...({ mobileSafeArea: 'none' } as Record<string, unknown>)}
-        titleBar={<div>Title Bar</div>}
-      >
+      <mod.WindowFrame {...({ mobileSafeArea: 'none' } as Record<string, unknown>)} titleBar={<div>Title Bar</div>}>
         <div>Page Content</div>
       </mod.WindowFrame>,
     );

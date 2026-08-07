@@ -25,19 +25,17 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
-        return this.props.fallback(
-          this.state.error ?? new Error('Unknown error'),
-          () => this.setState({ hasError: false, error: null }),
+        return this.props.fallback(this.state.error ?? new Error('Unknown error'), () =>
+          this.setState({ hasError: false, error: null }),
         );
       }
 
       return (
         <div className="flex h-[100vh] flex-col items-center justify-center gap-4 p-8 text-center">
           <p className="text-destructive text-lg font-medium">Something went wrong</p>
-          <p className="text-muted-foreground max-w-md text-sm">
-            {this.state.error?.message}
-          </p>
+          <p className="text-muted-foreground max-w-md text-sm">{this.state.error?.message}</p>
           <button
+            type="button"
             onClick={() => this.setState({ hasError: false, error: null })}
             className="bg-primary text-primary-foreground rounded-md px-4 py-2 text-sm"
           >

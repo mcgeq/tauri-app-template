@@ -12,6 +12,7 @@ export function LanguageToggle() {
 
   return (
     <button
+      type="button"
       onClick={handleToggleLanguage}
       className="title-bar-btn mr-1"
       aria-label={t('language.toggle')}

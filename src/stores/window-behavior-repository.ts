@@ -1,9 +1,6 @@
-import type { WindowBehaviorConfig } from '@/api/commands/window-behavior';
 import { emit, listen } from '@tauri-apps/api/event';
-import {
-  getWindowBehaviorConfig,
-  setWindowBehaviorConfig,
-} from '@/api/commands/window-behavior';
+import type { WindowBehaviorConfig } from '@/api/commands/window-behavior';
+import { getWindowBehaviorConfig, setWindowBehaviorConfig } from '@/api/commands/window-behavior';
 import { IS_TAURI_APP, SUPPORTS_TAURI_CALLBACKS } from '@/platform/runtime/platform';
 import { WINDOW_BEHAVIOR_SYNC_EVENT } from '@/platform/tauri/events';
 
@@ -34,8 +31,7 @@ function readBrowserConfig(): WindowBehaviorConfig {
       minimizeAction: parsed.minimizeAction === 'tray' ? 'tray' : 'taskbar',
       closeAction: parsed.closeAction === 'quit' ? 'quit' : 'tray',
     };
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Failed to parse browser window behavior config:', error);
     return DEFAULT_WINDOW_BEHAVIOR_CONFIG;
   }
@@ -70,7 +66,7 @@ export function createWindowBehaviorRepository(): WindowBehaviorRepository {
         return () => {};
       }
 
-      return listen<WindowBehaviorConfig>(WINDOW_BEHAVIOR_SYNC_EVENT, event => handler(event.payload));
+      return listen<WindowBehaviorConfig>(WINDOW_BEHAVIOR_SYNC_EVENT, (event) => handler(event.payload));
     },
   };
 }

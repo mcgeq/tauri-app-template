@@ -55,9 +55,6 @@ describe('useGlobalShortcutSync', () => {
     renderHook(() => mod.useGlobalShortcutSync());
 
     expect(globalShortcutHookTestState.onShortcutChangedMock).toHaveBeenCalledTimes(1);
-    expect(globalShortcutHookTestState.registerShortcutMock).toHaveBeenCalledWith(
-      'Ctrl+Shift+K',
-      expect.any(Function),
-    );
+    expect(globalShortcutHookTestState.registerShortcutMock).toHaveBeenCalledWith('Ctrl+Shift+K', expect.any(Function));
   });
 });

@@ -6,10 +6,7 @@ import { openAppRoute } from '@/platform/windows/open-app-route';
 
 type OpenAppRouteOptions = Parameters<typeof openAppRoute>[1];
 
-export function useOpenSettingsEvent(
-  navigate: OpenAppRouteOptions['navigate'],
-  t: OpenAppRouteOptions['t'],
-) {
+export function useOpenSettingsEvent(navigate: OpenAppRouteOptions['navigate'], t: OpenAppRouteOptions['t']) {
   useEffect(() => {
     if (!SUPPORTS_TAURI_CALLBACKS) {
       return;
@@ -18,7 +15,7 @@ export function useOpenSettingsEvent(
     const unlistenOpenSettings = listen(OPEN_SETTINGS_WINDOW_EVENT, () => openAppRoute('settings', { navigate, t }));
 
     return () => {
-      unlistenOpenSettings.then(fn => fn());
+      unlistenOpenSettings.then((fn) => fn());
     };
   }, [navigate, t]);
 }

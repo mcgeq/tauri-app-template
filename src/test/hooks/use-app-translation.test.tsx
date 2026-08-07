@@ -53,10 +53,12 @@ describe('useAppTranslation', () => {
   it('subscribes to cross-window language sync when callbacks are available', () => {
     translationHookTestState.isTauri = true;
     translationHookTestState.callbackSupport = true;
-    translationHookTestState.onLanguageChangedMock.mockImplementation((handler: (payload: { language: string }) => void) => {
-      handler({ language: 'zh' });
-      return Promise.resolve(vi.fn());
-    });
+    translationHookTestState.onLanguageChangedMock.mockImplementation(
+      (handler: (payload: { language: string }) => void) => {
+        handler({ language: 'zh' });
+        return Promise.resolve(vi.fn());
+      },
+    );
 
     renderHook(() => useAppTranslation());
 

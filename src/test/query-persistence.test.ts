@@ -39,10 +39,7 @@ describe('query persistence', () => {
       queryFn: async () => 'drop me',
     });
 
-    const persisted = dehydrate(
-      queryClient,
-      createQueryPersistenceOptions(createMemoryStorage()).dehydrateOptions,
-    );
+    const persisted = dehydrate(queryClient, createQueryPersistenceOptions(createMemoryStorage()).dehydrateOptions);
 
     expect(persisted.queries).toHaveLength(1);
     expect(persisted.queries[0]?.queryKey).toEqual(['persisted']);
@@ -62,10 +59,7 @@ describe('query persistence', () => {
 
     await persister.persistClient(persistedClient);
 
-    expect(storage.setItem).toHaveBeenCalledWith(
-      QUERY_CACHE_STORAGE_KEY,
-      expect.any(String),
-    );
+    expect(storage.setItem).toHaveBeenCalledWith(QUERY_CACHE_STORAGE_KEY, expect.any(String));
     expect(await persister.restoreClient()).toEqual(persistedClient);
   });
 

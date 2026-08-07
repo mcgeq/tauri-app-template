@@ -21,13 +21,7 @@ vi.mock('@/features/updater/components/updater-dialog', () => ({
 }));
 
 vi.mock('@/app/shell/window-frame', () => ({
-  WindowFrame: ({
-    children,
-    mobileSafeArea,
-  }: {
-    children: React.ReactNode;
-    mobileSafeArea?: string;
-  }) => (
+  WindowFrame: ({ children, mobileSafeArea }: { children: React.ReactNode; mobileSafeArea?: string }) => (
     <div data-testid="window-frame" data-mobile-safe-area={mobileSafeArea ?? 'default'}>
       {children}
     </div>
@@ -87,10 +81,10 @@ describe('app shell mobile safe area handling', () => {
   it('keeps the canonical shell layout focused on app-shell modules', async () => {
     const canonicalSource = await import('@/app/shell/app-shell-layout?raw');
 
-    expect(canonicalSource.default).toContain('from \'@/app/shell/main-title-bar\'');
-    expect(canonicalSource.default).toContain('from \'@/app/shell/sidebar\'');
-    expect(canonicalSource.default).toContain('from \'@/app/shell/window-frame\'');
-    expect(canonicalSource.default).toContain('from \'@/app/shell/hooks/use-global-shortcut-sync\'');
+    expect(canonicalSource.default).toContain("from '@/app/shell/main-title-bar'");
+    expect(canonicalSource.default).toContain("from '@/app/shell/sidebar'");
+    expect(canonicalSource.default).toContain("from '@/app/shell/window-frame'");
+    expect(canonicalSource.default).toContain("from '@/app/shell/hooks/use-global-shortcut-sync'");
     expect(canonicalSource.default).not.toContain('@/features/home/components/main-title-bar');
   });
 

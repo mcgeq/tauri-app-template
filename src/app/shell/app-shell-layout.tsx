@@ -31,7 +31,9 @@ export function AppShellLayout() {
     <WindowFrame
       titleBar={<MainTitleBar />}
       mobileSafeArea="none"
-      contentClassName={IS_DESKTOP ? 'flex min-h-0 flex-1 flex-row overflow-hidden' : 'flex min-h-0 flex-1 overflow-hidden'}
+      contentClassName={
+        IS_DESKTOP ? 'flex min-h-0 flex-1 flex-row overflow-hidden' : 'flex min-h-0 flex-1 overflow-hidden'
+      }
     >
       {!isMobile && <Sidebar />}
       <div className="flex min-h-0 min-w-0 flex-1 flex-col">
@@ -45,11 +47,11 @@ export function AppShellLayout() {
         >
           <ShellRouteBoundary>
             <Suspense
-              fallback={(
+              fallback={
                 <div className="route-fade-shell">
                   <Loading />
                 </div>
-              )}
+              }
             >
               <Outlet />
             </Suspense>

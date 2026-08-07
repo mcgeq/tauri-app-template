@@ -10,7 +10,7 @@ describe('tauri.conf.json mobile runtime compatibility', () => {
       };
     };
 
-    expect(config.app?.security?.csp).toContain('script-src \'self\' \'unsafe-inline\'');
+    expect(config.app?.security?.csp).toContain("script-src 'self' 'unsafe-inline'");
   });
 
   it('does not expose the global tauri object by default', () => {

@@ -48,21 +48,13 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
         <Command.Empty>No results found.</Command.Empty>
 
         <Command.Group heading="Navigation">
-          <Command.Item onSelect={handleOpenSettings}>
-            Settings
-          </Command.Item>
-          <Command.Item onSelect={handleOpenAbout}>
-            About
-          </Command.Item>
+          <Command.Item onSelect={handleOpenSettings}>Settings</Command.Item>
+          <Command.Item onSelect={handleOpenAbout}>About</Command.Item>
         </Command.Group>
 
         <Command.Group heading="Preferences">
-          <Command.Item onSelect={handleToggleTheme}>
-            {t('theme.toggle')}
-          </Command.Item>
-          <Command.Item onSelect={handleToggleLanguage}>
-            {t('language.toggle')}
-          </Command.Item>
+          <Command.Item onSelect={handleToggleTheme}>{t('theme.toggle')}</Command.Item>
+          <Command.Item onSelect={handleToggleLanguage}>{t('language.toggle')}</Command.Item>
         </Command.Group>
       </Command.List>
     </Command.Dialog>

@@ -1,9 +1,9 @@
-import type { CreateWindowOptions } from '@/platform/windows/webview-window-options';
 import { LogicalPosition } from '@tauri-apps/api/dpi';
 import { once } from '@tauri-apps/api/event';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { IS_DESKTOP, IS_MOBILE_DEVICE } from '@/platform/runtime/platform';
 import { destroyWindowEvent } from '@/platform/tauri/events';
+import type { CreateWindowOptions } from '@/platform/windows/webview-window-options';
 import { buildWebviewWindowOptions } from '@/platform/windows/webview-window-options';
 import { cancelDestroyWindow, destroyWindow } from '@/platform/windows/window-lifecycle';
 import { navigateWindowFallback } from '@/platform/windows/window-navigation-bridge';
@@ -16,9 +16,7 @@ async function calcCenterPosition(
   height: number,
   parentLabel?: string,
 ): Promise<{ center: true } | { x: number; y: number }> {
-  const parentWindow = parentLabel
-    ? await WebviewWindow.getByLabel(parentLabel)
-    : WebviewWindow.getCurrent();
+  const parentWindow = parentLabel ? await WebviewWindow.getByLabel(parentLabel) : WebviewWindow.getCurrent();
 
   if (!parentWindow) {
     return { center: true };
@@ -47,8 +45,7 @@ async function calcCenterPosition(
     }
 
     return { x, y };
-  }
-  catch (error) {
+  } catch (error) {
     console.warn('Failed to calculate centered position:', error);
     return { center: true };
   }
@@ -66,8 +63,7 @@ export async function toggleWindow(label: string) {
 
   if ((await window.isVisible()) && !(await window.isMinimized()) && (await window.isFocused())) {
     await window.hide();
-  }
-  else {
+  } else {
     await showWindow(label);
   }
 }
@@ -162,12 +158,10 @@ export async function createWindow(
           const centerPos = await calcCenterPosition(width, height, options.parent);
           if ('center' in centerPos) {
             await window.center();
-          }
-          else {
+          } else {
             await window.setPosition(new LogicalPosition(centerPos.x, centerPos.y));
           }
-        }
-        catch (error) {
+        } catch (error) {
           console.error('Failed to center window:', error);
         }
       }
@@ -189,12 +183,10 @@ export async function createWindow(
           const centerPos = await calcCenterPosition(width, height, parent);
           if ('center' in centerPos) {
             await webview.center();
-          }
-          else {
+          } else {
             await webview.setPosition(new LogicalPosition(centerPos.x, centerPos.y));
           }
-        }
-        catch (error) {
+        } catch (error) {
           console.error('Failed to center window:', error);
           await webview.center();
         }
@@ -213,8 +205,7 @@ export async function createWindow(
       console.error('Failed to create window:', label, JSON.stringify(error));
       handlers?.onError?.();
     });
-  }
-  finally {
+  } finally {
     createWindowLoading[label] = false;
   }
 }

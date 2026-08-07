@@ -35,9 +35,7 @@ describe('invokeCommand', () => {
   });
 
   it('throws CommandError on timeout', async () => {
-    (invoke as ReturnType<typeof vi.fn>).mockImplementation(
-      () => new Promise(resolve => setTimeout(resolve, 100)),
-    );
+    (invoke as ReturnType<typeof vi.fn>).mockImplementation(() => new Promise((resolve) => setTimeout(resolve, 100)));
 
     await expect(invokeCommand('slow', {}, { timeoutMs: 10 })).rejects.toThrow(CommandError);
     await expect(invokeCommand('slow', {}, { timeoutMs: 10 })).rejects.toThrow(/may still complete/);

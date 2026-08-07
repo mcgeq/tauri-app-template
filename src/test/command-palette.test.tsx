@@ -16,17 +16,9 @@ vi.mock('cmdk', () => ({
     List: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     Empty: ({ children }: { children: React.ReactNode }) => <div>{children}</div>,
     Group: ({ children, heading }: { children: React.ReactNode; heading?: string }) => (
-      <section aria-label={heading}>
-        {children}
-      </section>
+      <section aria-label={heading}>{children}</section>
     ),
-    Item: ({
-      children,
-      onSelect,
-    }: {
-      children: React.ReactNode;
-      onSelect?: () => void;
-    }) => (
+    Item: ({ children, onSelect }: { children: React.ReactNode; onSelect?: () => void }) => (
       <button onClick={onSelect} type="button">
         {children}
       </button>

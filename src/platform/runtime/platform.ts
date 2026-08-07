@@ -1,5 +1,5 @@
-import type { Platform } from '@tauri-apps/plugin-os';
 import { isTauri } from '@tauri-apps/api/core';
+import type { Platform } from '@tauri-apps/plugin-os';
 import { platform as getTauriPlatform } from '@tauri-apps/plugin-os';
 
 const MOBILE_USER_AGENT_RE = /Android|iPhone|iPad|iPod|Mobile/i;
@@ -14,9 +14,10 @@ const DESKTOP_PLATFORMS = new Set<Platform>([
   'solaris',
 ]);
 
-type TauriWindow = Window & typeof globalThis & {
-  __TAURI_INTERNALS__?: unknown;
-};
+type TauriWindow = Window &
+  typeof globalThis & {
+    __TAURI_INTERNALS__?: unknown;
+  };
 
 export interface PlatformInfo {
   isDesktop: boolean;
@@ -37,11 +38,15 @@ export interface DetectPlatformOptions {
 
 let cachedPlatformInfo: PlatformInfo | null = null;
 
-function hasTransformCallback(tauriInternals: unknown): tauriInternals is { transformCallback: (...args: unknown[]) => unknown } {
-  return typeof tauriInternals === 'object'
-    && tauriInternals !== null
-    && 'transformCallback' in tauriInternals
-    && typeof tauriInternals.transformCallback === 'function';
+function hasTransformCallback(
+  tauriInternals: unknown,
+): tauriInternals is { transformCallback: (...args: unknown[]) => unknown } {
+  return (
+    typeof tauriInternals === 'object' &&
+    tauriInternals !== null &&
+    'transformCallback' in tauriInternals &&
+    typeof tauriInternals.transformCallback === 'function'
+  );
 }
 
 function isDesktopPlatform(osPlatform: Platform | 'unknown') {
@@ -49,24 +54,18 @@ function isDesktopPlatform(osPlatform: Platform | 'unknown') {
 }
 
 function guessPlatformFromUA(userAgent: string): Platform | 'unknown' {
-  if (/iphone|ipad|ipod/i.test(userAgent))
-    return 'ios';
-  if (/android/i.test(userAgent))
-    return 'android';
-  if (/windows/i.test(userAgent))
-    return 'windows';
-  if (/macintosh|mac os x/i.test(userAgent))
-    return 'macos';
-  if (/linux/i.test(userAgent))
-    return 'linux';
+  if (/iphone|ipad|ipod/i.test(userAgent)) return 'ios';
+  if (/android/i.test(userAgent)) return 'android';
+  if (/windows/i.test(userAgent)) return 'windows';
+  if (/macintosh|mac os x/i.test(userAgent)) return 'macos';
+  if (/linux/i.test(userAgent)) return 'linux';
   return 'unknown';
 }
 
 function detectTauriRuntime() {
   try {
     return isTauri();
-  }
-  catch {
+  } catch {
     return false;
   }
 }
@@ -87,8 +86,7 @@ function resolvePlatform({
   if (tauri) {
     try {
       return getTauriPlatform();
-    }
-    catch (error) {
+    } catch (error) {
       console.warn('Failed to get platform from Tauri:', error);
     }
   }
@@ -107,9 +105,7 @@ function createPlatformInfo({
     tauri,
     osPlatform,
   });
-  const isDesktop = tauri
-    ? isDesktopPlatform(resolvedPlatform)
-    : !MOBILE_USER_AGENT_RE.test(userAgent);
+  const isDesktop = tauri ? isDesktopPlatform(resolvedPlatform) : !MOBILE_USER_AGENT_RE.test(userAgent);
   const isMobile = tauri ? !isDesktop : MOBILE_USER_AGENT_RE.test(userAgent);
 
   return {
@@ -124,10 +120,12 @@ function createPlatformInfo({
 }
 
 function hasOverrides(options: DetectPlatformOptions) {
-  return options.userAgent !== undefined
-    || options.tauri !== undefined
-    || options.tauriInternals !== undefined
-    || options.osPlatform !== undefined;
+  return (
+    options.userAgent !== undefined ||
+    options.tauri !== undefined ||
+    options.tauriInternals !== undefined ||
+    options.osPlatform !== undefined
+  );
 }
 
 export function getPlatformInfo(): PlatformInfo {

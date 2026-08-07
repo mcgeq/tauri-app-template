@@ -1,7 +1,7 @@
-import type { AppLanguage } from '@/i18n/resources';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { onLanguageChanged } from '@/api';
+import type { AppLanguage } from '@/i18n/resources';
 import { IS_TAURI_APP, SUPPORTS_TAURI_CALLBACKS } from '@/platform/runtime/platform';
 
 export function useAppTranslation() {
@@ -17,7 +17,7 @@ export function useAppTranslation() {
     });
 
     return () => {
-      unlistenLanguageChanged.then(fn => fn());
+      unlistenLanguageChanged.then((fn) => fn());
     };
   }, [i18n]);
 

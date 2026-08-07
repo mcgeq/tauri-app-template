@@ -46,13 +46,7 @@ vi.mock('@/features/updater/components/updater-dialog', () => ({
 }));
 
 vi.mock('@/app/shell/window-frame', () => ({
-  WindowFrame: ({
-    children,
-    titleBar,
-  }: {
-    children: React.ReactNode;
-    titleBar: React.ReactNode;
-  }) => (
+  WindowFrame: ({ children, titleBar }: { children: React.ReactNode; titleBar: React.ReactNode }) => (
     <div>
       {titleBar}
       {children}

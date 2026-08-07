@@ -21,7 +21,7 @@ interface MockCommand {
 
 export function mockTauriCommands(commands: MockCommand[]) {
   __setInvokeHandler((cmd) => {
-    const match = commands.find(c => c.cmd === cmd);
+    const match = commands.find((c) => c.cmd === cmd);
     if (match) {
       return match.response;
     }

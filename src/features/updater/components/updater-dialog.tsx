@@ -26,12 +26,10 @@ export function UpdaterDialog({ manualCheck = false, onCheckComplete }: UpdaterD
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (manualCheck || import.meta.env.DEV)
-      return;
+    if (manualCheck || import.meta.env.DEV) return;
 
     const now = Date.now();
-    if (now - lastAutoCheck < AUTO_CHECK_INTERVAL)
-      return;
+    if (now - lastAutoCheck < AUTO_CHECK_INTERVAL) return;
 
     lastAutoCheck = now;
     void checkUpdate();
@@ -41,8 +39,7 @@ export function UpdaterDialog({ manualCheck = false, onCheckComplete }: UpdaterD
     if (update) {
       setOpen(true);
       onCheckComplete?.();
-    }
-    else if (manualCheck && !checking) {
+    } else if (manualCheck && !checking) {
       onCheckComplete?.();
     }
   }, [update, checking, manualCheck, onCheckComplete]);
@@ -56,13 +53,10 @@ export function UpdaterDialog({ manualCheck = false, onCheckComplete }: UpdaterD
   };
 
   const getProgressPercentage = () => {
-    if (!progress || progress.event === 'Started')
-      return 0;
+    if (!progress || progress.event === 'Started') return 0;
     const { downloaded, contentLength } = progress.data || {};
-    if (!contentLength)
-      return 0;
-    if (progress.event === 'Finished')
-      return 100;
+    if (!contentLength) return 0;
+    if (progress.event === 'Finished') return 100;
     return Math.round(((downloaded ?? 0) / contentLength) * 100);
   };
 
@@ -70,28 +64,24 @@ export function UpdaterDialog({ manualCheck = false, onCheckComplete }: UpdaterD
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>
-            {downloading ? t('updater.downloading') : t('updater.updateAvailable')}
-          </DialogTitle>
+          <DialogTitle>{downloading ? t('updater.downloading') : t('updater.updateAvailable')}</DialogTitle>
           <DialogDescription>
-            {downloading
-              ? (
-                  <div className="space-y-2">
-                    <p>{t('updater.installingVersion', { version: update?.version })}</p>
-                    <Progress value={getProgressPercentage()} />
-                  </div>
-                )
-              : (
-                  <div className="space-y-2">
-                    <p>{t('updater.versionAvailable', { version: update?.version })}</p>
-                    {update?.body && (
-                      <div className="bg-muted mt-2 rounded-md p-3 text-sm">
-                        <p className="font-semibold">{t('updater.releaseNotes')}</p>
-                        <p className="mt-1 whitespace-pre-wrap">{update.body}</p>
-                      </div>
-                    )}
+            {downloading ? (
+              <div className="space-y-2">
+                <p>{t('updater.installingVersion', { version: update?.version })}</p>
+                <Progress value={getProgressPercentage()} />
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <p>{t('updater.versionAvailable', { version: update?.version })}</p>
+                {update?.body && (
+                  <div className="bg-muted mt-2 rounded-md p-3 text-sm">
+                    <p className="font-semibold">{t('updater.releaseNotes')}</p>
+                    <p className="mt-1 whitespace-pre-wrap">{update.body}</p>
                   </div>
                 )}
+              </div>
+            )}
           </DialogDescription>
         </DialogHeader>
         {!downloading && (

@@ -1,5 +1,5 @@
-import type { Update } from '@tauri-apps/plugin-updater';
 import { relaunch } from '@tauri-apps/plugin-process';
+import type { Update } from '@tauri-apps/plugin-updater';
 import { check } from '@tauri-apps/plugin-updater';
 
 export interface UpdateProgress {
@@ -11,10 +11,10 @@ export interface UpdateProgress {
   };
 }
 
-export type UpdateCheckResult
-  = | { status: 'available'; update: Update }
-    | { status: 'up-to-date' }
-    | { status: 'error'; error: unknown };
+export type UpdateCheckResult =
+  | { status: 'available'; update: Update }
+  | { status: 'up-to-date' }
+  | { status: 'error'; error: unknown };
 
 export async function checkForUpdates(): Promise<UpdateCheckResult> {
   try {
@@ -24,8 +24,7 @@ export async function checkForUpdates(): Promise<UpdateCheckResult> {
     }
 
     return { status: 'up-to-date' };
-  }
-  catch (error) {
+  } catch (error) {
     console.error('Failed to check for updates:', error);
     return { status: 'error', error };
   }

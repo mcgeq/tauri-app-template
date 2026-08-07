@@ -8,11 +8,7 @@ import { appShellRoute } from '@/routes/app-shell-route';
 
 export function buildRouteTree() {
   return rootRoute.addChildren([
-    appShellRoute.addChildren([
-      homeRoute,
-      tasksRoute,
-      profileRoute,
-    ]),
+    appShellRoute.addChildren([homeRoute, tasksRoute, profileRoute]),
     aboutRoute,
     settingsRoute,
   ]);

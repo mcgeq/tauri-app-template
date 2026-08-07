@@ -74,7 +74,9 @@ describe('root mobile shell', () => {
     const mod = await import('@/routes/__root');
     const { container } = render(<mod.RootLayout />);
 
-    expect(container.firstElementChild?.className).not.toContain('pb-[calc(var(--bottom-nav-height)+var(--app-safe-area-bottom))]');
+    expect(container.firstElementChild?.className).not.toContain(
+      'pb-[calc(var(--bottom-nav-height)+var(--app-safe-area-bottom))]',
+    );
   });
 
   it('does not fake the content height with a bottom-nav subtraction when the bottom nav is visible', async () => {
@@ -82,7 +84,9 @@ describe('root mobile shell', () => {
     const mod = await import('@/routes/__root');
     const { container } = render(<mod.RootLayout />);
 
-    expect(container.firstElementChild?.className).not.toContain('min-h-[calc(100dvh-var(--bottom-nav-height)-var(--app-safe-area-bottom))]');
+    expect(container.firstElementChild?.className).not.toContain(
+      'min-h-[calc(100dvh-var(--bottom-nav-height)-var(--app-safe-area-bottom))]',
+    );
   });
 
   it('keeps the routed outlet inside a flex column shell on mobile', async () => {

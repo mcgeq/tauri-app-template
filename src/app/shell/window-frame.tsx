@@ -36,7 +36,9 @@ export function WindowFrame({
       <main
         className={cn(
           'flex min-h-0 min-w-0 flex-1 flex-col',
-          isMobile && mobileSafeArea === 'all' && 'pt-[var(--app-safe-area-top)] pl-[var(--app-safe-area-left)] pr-[var(--app-safe-area-right)]',
+          isMobile &&
+            mobileSafeArea === 'all' &&
+            'pt-[var(--app-safe-area-top)] pl-[var(--app-safe-area-left)] pr-[var(--app-safe-area-right)]',
           contentClassName,
         )}
       >

@@ -1,13 +1,7 @@
 import type { Update } from '@tauri-apps/plugin-updater';
-import type {
-  UpdateCheckResult,
-  UpdateProgress,
-} from '@/lib/updater';
 import { useState } from 'react';
-import {
-  checkForUpdates,
-  downloadAndInstall,
-} from '@/lib/updater';
+import type { UpdateCheckResult, UpdateProgress } from '@/lib/updater';
+import { checkForUpdates, downloadAndInstall } from '@/lib/updater';
 
 export function useUpdater() {
   const [update, setUpdate] = useState<Update | null>(null);
@@ -21,8 +15,7 @@ export function useUpdater() {
       const result = await checkForUpdates();
       setUpdate(result.status === 'available' ? result.update : null);
       return result;
-    }
-    finally {
+    } finally {
       setChecking(false);
     }
   };
@@ -33,8 +26,7 @@ export function useUpdater() {
       await downloadAndInstall((progressEvent) => {
         setProgress(progressEvent);
       });
-    }
-    catch (error) {
+    } catch (error) {
       console.error('Failed to install update:', error);
       setDownloading(false);
     }

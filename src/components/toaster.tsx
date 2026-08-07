@@ -1,13 +1,7 @@
-import type { ToasterProps } from 'sonner';
-import {
-  CircleCheckIcon,
-  InfoIcon,
-  Loader2Icon,
-  OctagonXIcon,
-  TriangleAlertIcon,
-} from 'lucide-react';
+import { CircleCheckIcon, InfoIcon, Loader2Icon, OctagonXIcon, TriangleAlertIcon } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
+import type { ToasterProps } from 'sonner';
 import { Toaster as Sonner } from 'sonner';
 import { useTheme } from '@/providers/theme-provider';
 

@@ -1,10 +1,10 @@
-import type { NavIconKey } from '@/routes/registry/route-types';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { Info, LayoutDashboard, Settings, Timer, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
 import { getNavRoutes } from '@/routes/registry/route-registry';
+import type { NavIconKey } from '@/routes/registry/route-types';
 
 export type Section = 'home' | 'tasks' | 'profile';
 
@@ -33,6 +33,7 @@ export function Sidebar() {
               <Tooltip key={item.key}>
                 <TooltipTrigger asChild>
                   <button
+                    type="button"
                     onClick={() => navigate({ to: item.path })}
                     className={cn(
                       'flex items-center justify-center rounded-lg p-2 transition-colors',
@@ -44,9 +45,7 @@ export function Sidebar() {
                     <Icon className="h-4 w-4 shrink-0" />
                   </button>
                 </TooltipTrigger>
-                <TooltipContent side="right">
-                  {t(item.nav.labelKey)}
-                </TooltipContent>
+                <TooltipContent side="right">{t(item.nav.labelKey)}</TooltipContent>
               </Tooltip>
             );
           })}

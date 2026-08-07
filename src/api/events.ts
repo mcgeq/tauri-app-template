@@ -16,17 +16,13 @@ export async function emitLanguageChanged(language: string): Promise<void> {
   await emit('language-changed', { language });
 }
 
-export function onShortcutChanged(
-  handler: (payload: ShortcutChangedPayload) => void,
-): Promise<() => void> {
+export function onShortcutChanged(handler: (payload: ShortcutChangedPayload) => void): Promise<() => void> {
   return listen<ShortcutChangedPayload>('shortcut-changed', (event) => {
     handler(event.payload);
   });
 }
 
-export function onLanguageChanged(
-  handler: (payload: LanguageChangedPayload) => void,
-): Promise<() => void> {
+export function onLanguageChanged(handler: (payload: LanguageChangedPayload) => void): Promise<() => void> {
   return listen<LanguageChangedPayload>('language-changed', (event) => {
     handler(event.payload);
   });

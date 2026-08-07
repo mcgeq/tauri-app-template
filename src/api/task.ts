@@ -14,17 +14,13 @@ export async function startBackgroundTask(): Promise<void> {
   return invokeCommand<void>('start_background_task', {}, { timeoutMs: 30_000 });
 }
 
-export function onTaskProgress(
-  handler: (payload: TaskProgressPayload) => void,
-): Promise<() => void> {
+export function onTaskProgress(handler: (payload: TaskProgressPayload) => void): Promise<() => void> {
   return listen<TaskProgressPayload>('task-progress', (event) => {
     handler(event.payload);
   });
 }
 
-export function onTaskComplete(
-  handler: (payload: TaskCompletePayload) => void,
-): Promise<() => void> {
+export function onTaskComplete(handler: (payload: TaskCompletePayload) => void): Promise<() => void> {
   return listen<TaskCompletePayload>('task-complete', (event) => {
     handler(event.payload);
   });

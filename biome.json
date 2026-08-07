@@ -17,6 +17,7 @@
       "!docs",
       "!scripts",
       "!src/auto-imports.d.ts",
+      "!src/assets",
       "!tsconfig.json",
       "!tsconfig.node.json",
       "!**/*.md"
@@ -39,6 +40,9 @@
     }
   },
   "css": {
+    "parser": {
+      "tailwindDirectives": true
+    },
     "formatter": {
       "quoteStyle": "single"
     }
@@ -59,8 +63,17 @@
     "enabled": true,
     "rules": {
       "preset": "recommended",
+      "style": {
+        "noNonNullAssertion": "off"
+      },
       "suspicious": {
-        "noDebugger": "warn"
+        "noDebugger": "warn",
+        "noUnknownAtRules": {
+          "level": "error",
+          "options": {
+            "ignore": ["tailwind", "apply", "config", "screen", "variants"]
+          }
+        }
       }
     }
   }

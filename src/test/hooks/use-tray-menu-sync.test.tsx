@@ -30,7 +30,7 @@ describe('useTrayMenuSync', () => {
   it('does not invoke tray initialization in a desktop browser preview', async () => {
     const mod = await import('@/app/shell/hooks/use-tray-menu-sync');
 
-    renderHook(() => mod.useTrayMenuSync(key => key));
+    renderHook(() => mod.useTrayMenuSync((key) => key));
 
     expect(trayMenuHookTestState.updateTrayMenuMock).not.toHaveBeenCalled();
   });
@@ -39,7 +39,7 @@ describe('useTrayMenuSync', () => {
     const mod = await import('@/app/shell/hooks/use-tray-menu-sync');
     trayMenuHookTestState.isTauri = true;
 
-    renderHook(() => mod.useTrayMenuSync(key => key));
+    renderHook(() => mod.useTrayMenuSync((key) => key));
 
     expect(trayMenuHookTestState.updateTrayMenuMock).toHaveBeenCalledWith({
       showText: 'tray.show',

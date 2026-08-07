@@ -1,7 +1,9 @@
 import { render, screen } from '@testing-library/react';
 
 vi.mock('@/components/ui/button', () => ({
-  Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => <button {...props}>{children}</button>,
+  Button: ({ children, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement>) => (
+    <button {...props}>{children}</button>
+  ),
 }));
 
 describe('window behavior section hydration', () => {
@@ -22,6 +24,10 @@ describe('window behavior section hydration', () => {
     expect(screen.getByRole('button', { name: 'settings.window.taskbar' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'settings.window.quit' })).toBeDisabled();
     expect(screen.getAllByRole('button', { name: 'settings.window.tray' })).toHaveLength(2);
-    expect(screen.getAllByRole('button', { name: 'settings.window.tray' }).every(button => button.hasAttribute('disabled'))).toBe(true);
+    expect(
+      screen
+        .getAllByRole('button', { name: 'settings.window.tray' })
+        .every((button) => button.hasAttribute('disabled')),
+    ).toBe(true);
   });
 });

@@ -1,9 +1,9 @@
-import type { NavIconKey } from '@/routes/registry/route-types';
 import { useLocation, useNavigate } from '@tanstack/react-router';
 import { Home, Info, List, Settings, User } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { getNavRoutes } from '@/routes/registry/route-registry';
+import type { NavIconKey } from '@/routes/registry/route-types';
 
 const iconMap: Record<NavIconKey, typeof Home> = {
   home: Home,
@@ -26,13 +26,12 @@ export function BottomNav() {
         const active = pathname === tab.path;
         return (
           <button
+            type="button"
             key={tab.key}
             onClick={() => navigate({ to: tab.path })}
             className={cn(
               'flex h-[var(--bottom-nav-height)] flex-1 flex-col items-center justify-center gap-0.5 py-2 text-xs transition-colors',
-              active
-                ? 'text-foreground'
-                : 'text-muted-foreground hover:text-foreground',
+              active ? 'text-foreground' : 'text-muted-foreground hover:text-foreground',
             )}
           >
             <Icon className="h-5 w-5" />

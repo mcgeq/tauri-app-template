@@ -2,25 +2,14 @@ describe('app route definitions', () => {
   it('exposes app-shell navigation routes in stable order for both platforms', async () => {
     const mod = await import('@/routes/registry/route-registry');
 
-    expect(mod.getNavRoutes('desktop').map(route => route.key)).toEqual([
-      'home',
-      'tasks',
-      'profile',
-    ]);
-    expect(mod.getNavRoutes('mobile').map(route => route.key)).toEqual([
-      'home',
-      'tasks',
-      'profile',
-    ]);
+    expect(mod.getNavRoutes('desktop').map((route) => route.key)).toEqual(['home', 'tasks', 'profile']);
+    expect(mod.getNavRoutes('mobile').map((route) => route.key)).toEqual(['home', 'tasks', 'profile']);
   });
 
   it('marks standalone desktop window routes as preloadable', async () => {
     const mod = await import('@/routes/registry/route-registry');
 
-    expect(mod.getPreloadableDesktopWindows().map(route => route.key)).toEqual([
-      'settings',
-      'about',
-    ]);
+    expect(mod.getPreloadableDesktopWindows().map((route) => route.key)).toEqual(['settings', 'about']);
   });
 
   it('marks reusable standalone desktop windows to close by hiding', async () => {
