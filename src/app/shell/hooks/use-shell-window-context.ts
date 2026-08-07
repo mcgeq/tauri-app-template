@@ -7,13 +7,11 @@ function getIsMainWindow(): boolean {
   }
   try {
     return getCurrentWebviewWindow().label === 'main';
-  }
-  catch {
+  } catch {
     return true;
   }
 }
 
-// eslint-disable-next-line react/no-unnecessary-use-prefix
 export function useShellWindowContext() {
   return { isMainWindow: getIsMainWindow() };
 }

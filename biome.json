@@ -9,16 +9,16 @@
   "files": {
     "includes": [
       "**",
-      "!**/dist/**",
-      "!**/coverage/**",
-      "!**/node_modules/**",
-      "!**/app/**",
-      "!**/src-tauri/**",
-      "!**/docs/**",
-      "!**/scripts/**",
-      "!**/src/auto-imports.d.ts",
-      "!**/tsconfig.json",
-      "!**/tsconfig.node.json",
+      "!dist",
+      "!coverage",
+      "!node_modules",
+      "!app",
+      "!src-tauri",
+      "!docs",
+      "!scripts",
+      "!src/auto-imports.d.ts",
+      "!tsconfig.json",
+      "!tsconfig.node.json",
       "!**/*.md"
     ],
     "ignoreUnknown": true
