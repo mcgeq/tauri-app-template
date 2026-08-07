@@ -83,7 +83,7 @@ See [Support Matrix](./docs/SUPPORT_MATRIX.md) for the current target status.
 - **Animation**: [motion](https://motion.dev/)
 - **Notifications**: [sonner](https://sonner.emilkowal.ski/) (toast) + `tauri-plugin-notification` (native)
 - **Logging**: [tracing](https://docs.rs/tracing/) + `tracing-subscriber`
-- **Code Quality**: [ESLint (antfu/eslint-config)](https://github.com/antfu/eslint-config)
+- **Code Quality**: [Biome](https://biomejs.dev/)
 
 ## Quick Start
 

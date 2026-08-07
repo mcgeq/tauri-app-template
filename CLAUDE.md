@@ -63,7 +63,7 @@ docker compose up  # Start dev environment in container
 - TypeScript strict mode
 - Function components with Hooks
 - Path alias: `@/` maps to `src/`
-- Format with ESLint (antfu/eslint-config)
+- Format with Biome (@biomejs/biome)
 - **Comments and logs MUST be in English only**
 - Keep code clean and minimal
 
@@ -138,7 +138,7 @@ UI rendering, interaction, and styling. Built with React 19 + TypeScript + Tailw
 | i18next | ^25.8.18 | Internationalization core |
 | react-i18next | ^16.5.8 | React i18n integration |
 | next-themes | ^0.4.6 | Theme provider |
-| @antfu/eslint-config | ^9.0.0 | ESLint + formatter |
+| @biomejs/biome | ^2.5.7 | Lint + format + organize imports |
 | @tanstack/react-router | ^1.170.15 | Routing |
 | @tanstack/react-query | ^5.101.0 | Data fetching |
 | @tanstack/react-query-persist-client | ^5.101.0 | Official query persistence provider |

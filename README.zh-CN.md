@@ -83,7 +83,7 @@
 - **动画**: [motion](https://motion.dev/)
 - **通知**: [sonner](https://sonner.emilkowal.ski/)（Toast）+ `tauri-plugin-notification`（原生）
 - **日志**: [tracing](https://docs.rs/tracing/) + `tracing-subscriber`
-- **代码规范**: [ESLint (antfu/eslint-config)](https://github.com/antfu/eslint-config)
+- **代码规范**: [Biome](https://biomejs.dev/)
 
 ## 快速开始
 
